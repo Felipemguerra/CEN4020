@@ -1,10 +1,17 @@
 import java.io.*;
-import java.util.Scanner;
 
+/*Implemented by Daniel and Brian*/
+
+/**
+ * A class that offers functionality to view and edit major.
+ * */
 public class Major {
 
-    public void TestShowMajor() {
-        File TestUserFile = new File(System.getProperty("user.dir")+"/src/test_profile/major");
+    /**
+     * Prints major from user profile.
+     * */
+    public void ShowMajor() {
+        File TestUserFile = new File(System.getProperty("user.dir")+"/../user_profile/major");
         try {
             FileReader InputStream = new FileReader(TestUserFile);
             BufferedReader BuffReader = new BufferedReader(InputStream);
@@ -19,24 +26,17 @@ public class Major {
                 buffer = BuffReader.readLine();
             }
             System.out.println("---------------------------------------");
+            BuffReader.close();
         }
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
-
-        System.out.println("Press Enter To Go Back");
-        Scanner scanner = new Scanner(System.in);
-        while (!scanner.nextLine().matches("")){
-            System.out.println("Try Again, Just Press Enter");
-        }
     }
 
-    public void TestChangeMajor() {
-        System.out.println("Changing Major");
-        File TestUserFile = new File(System.getProperty("user.dir")+"/src/test_profile/major");
-    }
-
-    public void TestShowProgress() {
-        File TestUserFile = new File(System.getProperty("user.dir")+"/src/test_profile/progress");
+    /**
+     * prints progress from progress file in user profile.
+     */
+    public void ShowProgress() {
+        File TestUserFile = new File(System.getProperty("user.dir")+"/../user_profile/progress");
         try {
             FileReader InputStream = new FileReader(TestUserFile);
             BufferedReader BuffReader = new BufferedReader(InputStream);
@@ -46,7 +46,7 @@ public class Major {
             System.out.println("---------------------------------------");
             System.out.println("Progress Report\n");
             String buffer = BuffReader.readLine();
-            System.out.println("Finished Classes:");
+            if(!buffer.matches("=")) System.out.println("Finished Classes:");
             String[] split;
             while (!buffer.matches("=")) {
                 split = buffer.split("\\+");
@@ -56,7 +56,7 @@ public class Major {
                 buffer = BuffReader.readLine();
             }
             buffer = BuffReader.readLine();
-            System.out.println("Unfinished Classes:");
+            if(buffer != null)System.out.println("Unfinished Classes:");
             while (buffer != null) {
                 split = buffer.split("\\+");
                 System.out.println("\t" + split[0] + "-" + split[1] + ": " + split[2]);
@@ -66,20 +66,19 @@ public class Major {
             System.out.println("\n\t" +finished+ "/" +total+ " Hours Completed");
 
             System.out.println("---------------------------------------");
+            BuffReader.close();
         }
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
-
-        System.out.println("Press Enter To Go Back");
-        Scanner scanner = new Scanner(System.in);
-        while (!scanner.nextLine().matches("")){
-            System.out.println("Try Again, Just Press Enter");
-        }
     }
 
-    public void ShowMajor() {}
-
-    public void ChangeMajor() {}
-
-    public void ShowProgress() {}
+    /**
+     * Uses the updateUser class to change major.
+     * @param first first name to keep name when changing major
+     * @param last last name to keep name when changing major
+     * */
+    public void ChangeMajor(String first, String last) {
+        UpdateUser temp = new UpdateUser();
+        temp.changeMajor(first, last);
+    }
 }
