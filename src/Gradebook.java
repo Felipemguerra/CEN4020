@@ -39,7 +39,7 @@ public class Gradebook {
     }
 
     private void startup() {
-        File UserDir = new File(System.getProperty("user.dir")+"/../user_profile");     //get user_profile directory, existing or not
+        File UserDir = new File(System.getProperty("user.dir")+"/user_profile");     //get user_profile directory, existing or not
         File TestCheck = new File(UserDir+"/test");                                     //this file is only in user_profile if user is a test user
 
         if (UserDir.exists()) {                                                                   //check existence of user_profile

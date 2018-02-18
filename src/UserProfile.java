@@ -52,7 +52,7 @@ public class UserProfile {
     * to populate the User Profile
      * */
     private void populate() {
-        File user = new File(System.getProperty("user.dir")+"/../user_profile/user");
+        File user = new File(System.getProperty("user.dir")+"/user_profile/user");
         try {
             FileReader InputStream = new FileReader(user);
             BufferedReader BuffReader = new BufferedReader(InputStream);

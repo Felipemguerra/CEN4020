@@ -11,7 +11,7 @@ public class Major {
      * Prints major from user profile.
      * */
     public void ShowMajor() {
-        File TestUserFile = new File(System.getProperty("user.dir")+"/../user_profile/major");
+        File TestUserFile = new File(System.getProperty("user.dir")+"/user_profile/major");
         try {
             FileReader InputStream = new FileReader(TestUserFile);
             BufferedReader BuffReader = new BufferedReader(InputStream);
@@ -36,7 +36,7 @@ public class Major {
      * prints progress from progress file in user profile.
      */
     public void ShowProgress() {
-        File TestUserFile = new File(System.getProperty("user.dir")+"/../user_profile/progress");
+        File TestUserFile = new File(System.getProperty("user.dir")+"/user_profile/progress");
         try {
             FileReader InputStream = new FileReader(TestUserFile);
             BufferedReader BuffReader = new BufferedReader(InputStream);

@@ -113,9 +113,9 @@ public class UpdateUser {
         catch (FileNotFoundException FNF) {System.err.println("Missing input File");return false;}
         catch (IOException IOE) {System.err.println("Error Reading From File");return false;}
 
-        File user = new File(System.getProperty("user.dir")+"/../user_profile/user");
-        File major = new File(System.getProperty("user.dir")+"/../user_profile/major");
-        File prog = new File(System.getProperty("user.dir")+"/../user_profile/progress");
+        File user = new File(System.getProperty("user.dir")+"/user_profile/user");
+        File major = new File(System.getProperty("user.dir")+"/user_profile/major");
+        File prog = new File(System.getProperty("user.dir")+"/user_profile/progress");
         try {
             BufferedReader BuffReader = new BufferedReader(new FileReader(input));
             BufferedWriter BuffWriter = new BufferedWriter(new FileWriter(user));
@@ -341,7 +341,7 @@ public class UpdateUser {
             System.out.println("Press 0 For Menu");
             }
         }
-        if (!populateFromFile(System.getProperty("user.dir") + "/../test_files/valid_user")) {System.out.println("Bad valid_user file. Can't create test user");return false;}
+        if (!populateFromFile(System.getProperty("user.dir") + "/test_files/valid_user")) {System.out.println("Bad valid_user file. Can't create test user");return false;}
         else return true;
     }
 
@@ -351,7 +351,8 @@ public class UpdateUser {
      * @return  the result of the test
      * */
     private boolean test(String s) {
-        return populateFromFile(System.getProperty("user.dir")+"/../test_files/"+s);
+	System.out.println(System.getProperty("user.dir")+"/test_files/"+s);
+        return populateFromFile(System.getProperty("user.dir")+"/test_files/"+s);
     }
 
     /**
