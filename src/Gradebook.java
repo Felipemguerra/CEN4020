@@ -128,11 +128,11 @@ public class Gradebook {
         if(UserExists) {
             System.out.println("\t1: Access User Profile");
             System.out.println("\t2: Reset User Profile(Will Current User)");
-            System.out.println("\t3: Run Test Profile(Will OverWrite Current User)");
+            System.out.println("\t3: Create Test Profile(Will OverWrite Current User)");
             System.out.println("\t4: Exit");
         } else {
             System.out.println("\t1: Create User Profile");
-            System.out.println("\t2: Run Test Profile");
+            System.out.println("\t2: Create Test Profile");
             System.out.println("\t3: Exit");
         }
         System.out.println("---------------------------------------");

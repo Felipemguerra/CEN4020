@@ -1,0 +1,52 @@
+<project>
+    <property name="verboseFlag" value="1"/>
+
+    <path id="classpath.test">
+        <pathelement location="lib/junit-4.12.jar"/>
+        <pathelement location="lib/hamcrest-core-1.3.jar"/>
+        <pathelement location="build/main"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/main"/>
+        <javac srcdir="src" destdir="build/main" includeantruntime="false"/>
+    </target>
+
+    <target name="test-compile" depends="compile">
+        <mkdir dir="build/tests"/>
+        <javac srcdir="test/" destdir="build/tests" includeantruntime="false">
+            <classpath refid="classpath.test"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="build/jar"/>
+        <jar destfile="build/jar/Gradebook.jar" basedir="build/main">
+            <manifest>
+                <attribute name="Main-Class" value="Gradebook"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="build/jar/Gradebook.jar" fork="true"/>
+    </target>
+
+    <target name="test-run" depends="test-compile">
+        <junit printsummary="on" haltonfailure="yes" fork="true">
+            <classpath>
+                <path refid="classpath.test"/>
+                <pathelement location="build/tests"/>
+            </classpath>
+            <formatter type="brief" usefile="false"/>
+            <batchtest>
+                <fileset dir="test" includes="**/Test*.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+</project>

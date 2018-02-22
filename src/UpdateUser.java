@@ -245,9 +245,10 @@ public class UpdateUser {
      * @param s the given name that will be checked.
      * @return  whether given name is valid or not
      * */
-    private boolean checkUserName(String s) {
+    public boolean checkUserName(String s) {
         if(s == null) return false;
         if (s.matches("")) return false;
+        if(s.matches("[\\s]+")) return false;
         if (!s.chars().allMatch(Character::isLetter)) return false;
         return true;
     }
@@ -257,9 +258,10 @@ public class UpdateUser {
      * @param s the given major that will be checked.
      * @return  whether given major is valid or not
      * */
-    private boolean checkMajor(String s) {
+    public boolean checkMajor(String s) {
         if(s == null) return false;
         if (s.matches("")) return false;
+        if (s.matches("[\\s]+")) return false;
         if (!s.matches("[a-zA-Z\\s]+")) return false;
         return true;
     }
@@ -269,9 +271,10 @@ public class UpdateUser {
      * @param s the given class subject code tha will be checked.
      * @return  whether given class subject code is valid or not
      * */
-    private boolean checkClassSubject(String s) {
+    public boolean checkClassSubject(String s) {
         if(s == null) return false;
         if (s.matches("")) return false;
+        if(s.matches("[\\s]+")) return false;
         if(!s.matches("[a-zA-Z]+") || s.length() != 3) return false;
         return true;
     }
@@ -281,9 +284,10 @@ public class UpdateUser {
      * @param s the given class code that will be checked.
      * @return  whether given class code is valid or not
      * */
-    private boolean checkClassCode(String s) {
+    public boolean checkClassCode(String s) {
         if(s == null) return false;
         if (s.matches("")) return false;
+        if(s.matches("[\\s]+")) return false;
         if(!s.matches("[0-9]+") || s.length() != 4) return false;
         return true;
     }
@@ -293,9 +297,10 @@ public class UpdateUser {
      * @param s the given class name that will be checked.
      * @return  whether given class name is valid or not
      * */
-    private boolean checkClassName(String s) {
+    public boolean checkClassName(String s) {
         if(s == null) return false;
         if(s.matches("")) return false;
+        if(s.matches("[\\s]+")) return false;
         return true;
     }
 
@@ -304,9 +309,10 @@ public class UpdateUser {
      * @param s the given credit hours that will be checked.
      * @return  whether given credit hours is valid or not
      * */
-    private boolean checkCreditHours(String s) {
+    public boolean checkCreditHours(String s) {
         if(s == null) return false;
         if (s.matches("")) return false;
+        if(s.matches("[\\s]+")) return false;
         if(!s.matches("[1-9]")) return false;
         return true;
     }
@@ -324,7 +330,7 @@ public class UpdateUser {
      * @return   whether valid_user file is valid
      * */
     public boolean runTests() {
-        int input;
+        /*int input;
         printTestDashboard();
         while((input = getTestInput()) != 9) {
             if(input == 0) printTestDashboard();
@@ -340,8 +346,9 @@ public class UpdateUser {
                 else  System.out.println("Bad Command: Try Again");
             System.out.println("Press 0 For Menu");
             }
-        }
-        if (!populateFromFile(System.getProperty("user.dir") + "/test_files/valid_user")) {System.out.println("Bad valid_user file. Can't create test user");return false;}
+        }*/
+        printTestDashboard();
+        if (!populateFromFile(System.getProperty("user.dir") + "/test_files/test_user")) {System.out.println("Bad valid_user file. Can't create test user");return false;}
         else return true;
     }
 
@@ -351,7 +358,7 @@ public class UpdateUser {
      * @return  the result of the test
      * */
     private boolean test(String s) {
-	System.out.println(System.getProperty("user.dir")+"/test_files/"+s);
+	    System.out.println(System.getProperty("user.dir")+"/test_files/"+s);
         return populateFromFile(System.getProperty("user.dir")+"/test_files/"+s);
     }
 
@@ -359,7 +366,7 @@ public class UpdateUser {
      * Test dashboard options.
      * */
     private void printTestDashboard() {
-        System.out.println("---------------------------------------");
+        /*System.out.println("---------------------------------------");
         System.out.println("\tEnter the Option Number");
         System.out.println("\t0: Show Menu");
         System.out.println("\t1: Run Test 1(Name contains non-letter character)");
@@ -372,7 +379,8 @@ public class UpdateUser {
         System.out.println("\t8: Run Test 8(Credit Hours is not a single digit integer or isn't a number)");
         System.out.println("\t9: Go Back(Will create valid test user to continue testing)");
         System.out.println("\tfalse  = failed test, true = passed test");
-        System.out.println("---------------------------------------");
+        System.out.println("---------------------------------------");*/
+        System.out.println("\tCreating Test Profile");
     }
 
     /**
