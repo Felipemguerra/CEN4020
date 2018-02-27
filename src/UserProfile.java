@@ -25,6 +25,8 @@ public class UserProfile {
      */
     private int mode;
 
+    private int count = 0;
+
     /**
      * Starts up the command menu and allows user to select several options
      * to access and edit user profile.
@@ -35,14 +37,14 @@ public class UserProfile {
         populate();
         Major UserMajor = new Major();
         int input;
-        printDashboard();
+        printProfileDashboard();
         while((input = getInput()) != 6) {
-            if(input == 0) printDashboard();
+            if(input == 0) printProfileDashboard();
             else if(input == 1) UserMajor.ShowMajor();
             else if(input == 2) UserMajor.ShowProgress();
             else if(input == 3) UserMajor.ChangeMajor(FirstName, LastName);
             else if(input == 4) System.out.println("Showing GPA(Not Yet Implemented)");
-            else if(input == 5) System.out.println("Going To Semesters(Not Yet Implemented)");
+            else if(input == 5) Semesters();
             else System.out.println("Sorry, Try Again.");
             System.out.println("Press 0 For Menu");
         }
@@ -70,7 +72,7 @@ public class UserProfile {
      * */
     private int getInput() {
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+        String input = scanner.nextLine();/*
         if (input.matches("0")) return 0;
         if (input.matches("1")) return 1;
         if (input.matches("2")) return 2;
@@ -78,13 +80,15 @@ public class UserProfile {
         if (input.matches("4")) return 4;
         if (input.matches("5")) return 5;
         if (input.matches("6")) return 6;
+        return -1;*/
+        if (input.matches("[0-9]+")) return Integer.parseInt(input);
         return -1;
     }
 
     /**
      * Command option printing method.
      * */
-    private void printDashboard() {
+    private void printProfileDashboard() {
         System.out.println("---------------------------------------");
         if (mode == 1)System.out.println("TEST");
         System.out.println("Hello " + FirstName + " " + LastName);
@@ -98,4 +102,53 @@ public class UserProfile {
         System.out.println("\t6: Go Back");
         System.out.println("---------------------------------------");
     }
+
+    private void Semesters() {
+        printSemestersDashboard();
+        int input;
+        while((input = getInput()) != count+2) {
+            if(input == 0) printSemestersDashboard();
+            else if(input == 1) System.out.println("Adding Semester");
+            else System.out.println("Sorry, Try Again.");
+            System.out.println("Press 0 For Menu");
+        }
+    }
+
+    private void printSemestersDashboard() {
+        System.out.println("---------------------------------------");
+        System.out.println("\t0: Show Menu");
+        System.out.println("\t1: Add Semester");
+        printSemesters();
+        int back;
+        if(count == 0) back = 2;
+        else back = count+2;
+        System.out.println("\t" + back + ": Go Back");
+        System.out.println("---------------------------------------");
+    }
+
+    private void printSemesters() {
+        File semesters = new File(System.getProperty("user.dir")+"/user_profile/semesters");
+        if(semesters.exists()){
+            try {
+                FileReader InputStream = new FileReader(semesters);
+                BufferedReader BuffReader = new BufferedReader(InputStream);
+
+                String buffer;
+                String[] line;
+                int counter = 2;
+
+                while((buffer = BuffReader.readLine()) != null) {
+                    line = buffer.split("\\+");
+                    System.out.println("\t" + counter + ": " + line[0] + " " + line[1]);
+                    counter++;
+                }
+                count=counter-2;
+                BuffReader.close();
+            }
+            catch (FileNotFoundException FNF) {}
+            catch (IOException IOE) {}
+        }
+    }
+
+    private void makeTestSemesters() {}
 }

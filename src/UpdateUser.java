@@ -348,7 +348,7 @@ public class UpdateUser {
             }
         }*/
         printTestDashboard();
-        if (!populateFromFile(System.getProperty("user.dir") + "/test_files/test_user")) {System.out.println("Bad valid_user file. Can't create test user");return false;}
+        if (!populateFromFile(System.getProperty("user.dir") + "/test_files/valid_user")) {System.out.println("Bad valid_user file. Can't create test user");return false;}
         else return true;
     }
 
