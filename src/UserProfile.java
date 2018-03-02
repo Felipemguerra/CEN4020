@@ -108,7 +108,12 @@ public class UserProfile {
         int input;
         while((input = getInput()) != count+2) {
             if(input == 0) printSemestersDashboard();
-            else if(input == 1) System.out.println("Adding Semester");
+            else if(input == 1) {
+                 System.out.println("Adding Semester");
+                 Semester newSemester = new Semester();
+                 newSemester.printSemesters();
+
+            }
             else System.out.println("Sorry, Try Again.");
             System.out.println("Press 0 For Menu");
         }
@@ -118,7 +123,7 @@ public class UserProfile {
         System.out.println("---------------------------------------");
         System.out.println("\t0: Show Menu");
         System.out.println("\t1: Add Semester");
-        printSemesters();
+       // printSemesters();
         int back;
         if(count == 0) back = 2;
         else back = count+2;
@@ -126,29 +131,7 @@ public class UserProfile {
         System.out.println("---------------------------------------");
     }
 
-    private void printSemesters() {
-        File semesters = new File(System.getProperty("user.dir")+"/user_profile/semesters");
-        if(semesters.exists()){
-            try {
-                FileReader InputStream = new FileReader(semesters);
-                BufferedReader BuffReader = new BufferedReader(InputStream);
-
-                String buffer;
-                String[] line;
-                int counter = 2;
-
-                while((buffer = BuffReader.readLine()) != null) {
-                    line = buffer.split("\\+");
-                    System.out.println("\t" + counter + ": " + line[0] + " " + line[1]);
-                    counter++;
-                }
-                count=counter-2;
-                BuffReader.close();
-            }
-            catch (FileNotFoundException FNF) {}
-            catch (IOException IOE) {}
-        }
-    }
+   
 
     private void makeTestSemesters() {}
 }
