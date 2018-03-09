@@ -6,7 +6,7 @@ import java.util.Scanner;
 /**
  * Used to update the files in the user profile.
  * */
-public class UpdateUser {
+public class CreateUser {
 
     /**
      * Called from starting gradebook console to create a new user
@@ -14,19 +14,9 @@ public class UpdateUser {
      * mode 0: Real User
      * mode 1: Test Use
      * */
-    public void make() {
+    public void createNewUser() {
         populateFromConsole(null);
         //possible implementation of from file for user
-    }
-
-    /**
-     * Calls the populateFromConsole method with the previously
-     * given name as a parameter.
-     * @param first current first name
-     * @param last current last name
-     * */
-    public void changeMajor(String first, String last) {
-        populateFromConsole(first+"\n"+last);
     }
 
     /**
@@ -35,7 +25,7 @@ public class UpdateUser {
      * just changing major.
      * @param name  if changing major("firs\nlast"), otherwise null
      * */
-    private void populateFromConsole(String name) {
+    public void populateFromConsole(String name) {
         String buffer;
         File temp = new File(System.getProperty("user.dir")+"/console_temp");
         Scanner scanner = new Scanner(System.in);
@@ -71,7 +61,7 @@ public class UpdateUser {
         }
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
-        populateFromFile(temp.getAbsolutePath());
+        populateFromFile(temp);
         temp.delete();
     }
 
@@ -79,10 +69,10 @@ public class UpdateUser {
      * Reads a provided file and creates a new user profile based
      * on it.  Assumes a valid input file.  Future error checking and
      * boolean return possible.
-     * @param   filename    the pathname of the given input file
+     * @param   input    input file
      * */
-    private boolean populateFromFile(String filename) {
-        File input = new File(filename);
+    private boolean populateFromFile(File input) {
+        //ile input = new File(filename);
         try {
             BufferedReader BuffReader = new BufferedReader(new FileReader(input));
 
@@ -113,9 +103,9 @@ public class UpdateUser {
         catch (FileNotFoundException FNF) {System.err.println("Missing input File");return false;}
         catch (IOException IOE) {System.err.println("Error Reading From File");return false;}
 
-        File user = new File(System.getProperty("user.dir")+"/user_profile/user");
-        File major = new File(System.getProperty("user.dir")+"/user_profile/major");
-        File prog = new File(System.getProperty("user.dir")+"/user_profile/progress");
+        File user = new File(UserProfile.userPath);
+        File major = new File(Major.majorPath);
+        File prog = new File(Major.progressPath);
         try {
             BufferedReader BuffReader = new BufferedReader(new FileReader(input));
             BufferedWriter BuffWriter = new BufferedWriter(new FileWriter(user));
@@ -331,7 +321,6 @@ public class UpdateUser {
      * */
     public boolean createTestUser() {
         System.out.println("\tCreating Test Profile");
-        if (!populateFromFile(System.getProperty("user.dir") + "/test_files/valid_user")) {System.out.println("Bad valid_user file. Can't create test user");return false;}
-        else return true;
+        return populateFromFile(new File(System.getProperty("user.dir") + "/test_files/valid_user"));
     }
 }

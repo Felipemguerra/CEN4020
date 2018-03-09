@@ -9,6 +9,8 @@ import java.util.Scanner;
  * */
 public class UserProfile{
 
+    public static String userPath = Gradebook.userPath+"user";
+
     /**
      * stores first name from user profile
      * */
@@ -23,22 +25,32 @@ public class UserProfile{
 
     private String[] semesters = {};
 
+    private String C_DASH = "0";
+    private String C_MAJOR = "1";
+    private String C_PROG = "2";
+    private String C_CHANGE = "3";
+    private String C_GPA = "4";
+    private String C_SEM = "5";
+    private String C_QUIT = "q";
+    private String C_TEST = "t";
+    private String C_ADD = "\\+";
+
     /**
      * Starts up the command menu and allows user to select several options
      * to access and edit user profile.
      * */
     public void startup() {
-        populate();
+        getName();
         Major UserMajor = new Major();
         String input;
         printProfileDashboard();
-        while(!(input = getInput()).matches("6")) {
-            if(input.matches("0")) printProfileDashboard();
-            else if(input.matches("1")) UserMajor.ShowMajor();
-            else if(input.matches("2")) UserMajor.ShowProgress();
-            else if(input.matches("3")) UserMajor.ChangeMajor(FirstName, LastName);
-            else if(input.matches("4")) System.out.println("Showing GPA(Not Yet Implemented)");
-            else if(input.matches("5")) Semesters();
+        while(!(input = getInput()).matches(C_QUIT)) {
+            if(input.matches(C_DASH)) printProfileDashboard();
+            else if(input.matches(C_MAJOR)) UserMajor.ShowMajor();
+            else if(input.matches(C_PROG)) UserMajor.ShowProgress();
+            else if(input.matches(C_CHANGE)) UserMajor.ChangeMajor(FirstName, LastName);
+            else if(input.matches(C_GPA)) System.out.println("Showing GPA(Not Yet Implemented)");
+            else if(input.matches(C_SEM)) Semesters();
             else System.out.println("Sorry, Try Again.");
             System.out.println("Press 0 For Menu");
         }
@@ -47,7 +59,7 @@ public class UserProfile{
     /**takes the first and last name from the user profile in a given user directory
     * to populate the User Profile
      * */
-    private void populate() {
+    private void getName() {
         File user = new File(System.getProperty("user.dir")+"/user_profile/user");
         try {
             FileReader InputStream = new FileReader(user);
@@ -82,7 +94,7 @@ public class UserProfile{
         System.out.println("\t3: Change Major");
         System.out.println("\t4: Show GPA(Not Yet Implemented)");
         System.out.println("\t5: Go To Semesters");
-        System.out.println("\t6: Go Back");
+        System.out.println("\tq: Go Back");
         System.out.println("---------------------------------------");
     }
 
@@ -90,10 +102,10 @@ public class UserProfile{
         getSemesters();
         printSemestersDashboard();
         String input;
-        while(!(input = getInput()).matches("q")) {
-            if(input.matches("\\+")) addSemester();
-            else if(input.matches("0")) printSemestersDashboard();
-            else if(input.matches("t")) makeTestSemesters();
+        while(!(input = getInput()).matches(C_QUIT)) {
+            if(input.matches(C_ADD)) addSemester();
+            else if(input.matches(C_DASH)) printSemestersDashboard();
+            else if(input.matches(C_TEST)) makeTestSemesters();
             else if(input.matches("[1-9]+")) {
                 int sem = Integer.parseInt(input);
                 if(sem > 0 && sem <= semesterCount) new Semester().startup(semesters[sem-1]);
@@ -106,9 +118,9 @@ public class UserProfile{
 
     private void printSemestersDashboard() {
         System.out.println("---------------------------------------");
-        System.out.println("\tq: Go Back");
-        System.out.println("\tt: Make Test Semesters");
-        System.out.println("\t+: Add Semester");
+        System.out.println("\t"+C_QUIT+": Go Back");
+        System.out.println("\t"+C_TEST+": Make Test Semesters");
+        System.out.println("\t"+C_ADD+": Add Semester");
         System.out.println("\t0: Show Menu");
         printSemesters();
         System.out.println("---------------------------------------");
@@ -138,7 +150,7 @@ public class UserProfile{
         String input = "";
         while(get) {
             get = false;
-            input = getSemesterInfo();
+            input = getSemesterFromConsole();
             for(String i : semesters) {
                 if(i.matches(input)) {
                     get = true;
@@ -150,7 +162,7 @@ public class UserProfile{
         getSemesters();
     }
 
-    private String getSemesterInfo() {
+    private String getSemesterFromConsole() {
         Scanner scanner = new Scanner(System.in);
         String semester = "", buffer = "";
         boolean get = true;

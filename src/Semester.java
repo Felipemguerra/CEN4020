@@ -8,13 +8,15 @@ public class Semester {
 
     private File semester;
 
+    public String semestersPath = Gradebook.userPath+"semesters/";
+
     public void startup(String name) {
-        semester = new File(System.getProperty("user.dir")+"/user_profile/semesters/"+name);
+        semester = new File(semestersPath+name);
         System.out.println("im here in" + name);
     }
 
     public void addNewSemester(String name) {
-        File newSemester = new File(System.getProperty("user.dir") + "/user_profile/semesters/"+name);
+        File newSemester = new File(semestersPath+name);
         try{
             newSemester.createNewFile();
         }

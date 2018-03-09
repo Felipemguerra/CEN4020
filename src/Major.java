@@ -7,11 +7,14 @@ import java.io.*;
  * */
 public class Major {
 
+    public static String majorPath = Gradebook.userPath+"major";
+    public static String progressPath = Gradebook.userPath+"progress";
+
     /**
      * Prints major from user profile.
      * */
     public void ShowMajor() {
-        File TestUserFile = new File(System.getProperty("user.dir")+"/user_profile/major");
+        File TestUserFile = new File(majorPath);
         try {
             FileReader InputStream = new FileReader(TestUserFile);
             BufferedReader BuffReader = new BufferedReader(InputStream);
@@ -36,7 +39,7 @@ public class Major {
      * prints progress from progress file in user profile.
      */
     public void ShowProgress() {
-        File TestUserFile = new File(System.getProperty("user.dir")+"/user_profile/progress");
+        File TestUserFile = new File(progressPath);
         try {
             FileReader InputStream = new FileReader(TestUserFile);
             BufferedReader BuffReader = new BufferedReader(InputStream);
@@ -78,7 +81,6 @@ public class Major {
      * @param last last name to keep name when changing major
      * */
     public void ChangeMajor(String first, String last) {
-        UpdateUser temp = new UpdateUser();
-        temp.changeMajor(first, last);
+        new CreateUser().populateFromConsole(first+"\n"+last);
     }
 }
