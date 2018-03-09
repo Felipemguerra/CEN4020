@@ -9,7 +9,7 @@ Software Engineering Group Project
 
 - ant test-run -- starts tests, compiles if necessary
 
-- ant test-compile -- compiles tests, compiles build if necessary
+- ant test-build -- compiles tests, compiles build if necessary
 
 - ant clean -- cleans up current build
 

@@ -319,7 +319,7 @@ public class UpdateUser {
 
     /*
     *
-    * Testing Methods
+    * Test Profile Methods
     *
     * */
 
@@ -329,77 +329,9 @@ public class UpdateUser {
      * to be run.  Returns a valid test user to continue testing.
      * @return   whether valid_user file is valid
      * */
-    public boolean runTests() {
-        /*int input;
-        printTestDashboard();
-        while((input = getTestInput()) != 9) {
-            if(input == 0) printTestDashboard();
-            else {
-                if(input == 1) {System.out.println("The Result of Test1: ");test("test1");}
-                else if(input == 2) System.out.println("The Result of Test2: " + test("test2"));
-                else if(input == 3) System.out.println("The Result of Test3: " + test("test3"));
-                else if(input == 4) System.out.println("The Result of Test4: " + test("test4"));
-                else if(input == 5) System.out.println("The Result of Test5: " + test("test5"));
-                else if(input == 6) System.out.println("The Result of Test6: " + test("test6"));
-                else if(input == 7) System.out.println("The Result of Test7: " + test("test7"));
-                else if(input == 8) System.out.println("The Result of Test8: " + test("test8"));
-                else  System.out.println("Bad Command: Try Again");
-            System.out.println("Press 0 For Menu");
-            }
-        }*/
-        printTestDashboard();
+    public boolean createTestUser() {
+        System.out.println("\tCreating Test Profile");
         if (!populateFromFile(System.getProperty("user.dir") + "/test_files/valid_user")) {System.out.println("Bad valid_user file. Can't create test user");return false;}
         else return true;
-    }
-
-    /**
-     * Run a given test from the test_files directory.
-     * @param s name of test file
-     * @return  the result of the test
-     * */
-    private boolean test(String s) {
-	    System.out.println(System.getProperty("user.dir")+"/test_files/"+s);
-        return populateFromFile(System.getProperty("user.dir")+"/test_files/"+s);
-    }
-
-    /**
-     * Test dashboard options.
-     * */
-    private void printTestDashboard() {
-        /*System.out.println("---------------------------------------");
-        System.out.println("\tEnter the Option Number");
-        System.out.println("\t0: Show Menu");
-        System.out.println("\t1: Run Test 1(Name contains non-letter character)");
-        System.out.println("\t2: Run Test 2(Name has empty first name)");
-        System.out.println("\t3: Run Test 3(Major contains non-letter character)");
-        System.out.println("\t4: Run Test 4(Empty Major Submitted)");
-        System.out.println("\t5: Run Test 5(No Classes submitted)");
-        System.out.println("\t6: Run Test 6(Class Subject Has non-letter character or isn't 3 characters long)");
-        System.out.println("\t7: Run Test 7(Class Number Has non-number character or isn't 4 characters long)");
-        System.out.println("\t8: Run Test 8(Credit Hours is not a single digit integer or isn't a number)");
-        System.out.println("\t9: Go Back(Will create valid test user to continue testing)");
-        System.out.println("\tfalse  = failed test, true = passed test");
-        System.out.println("---------------------------------------");*/
-        System.out.println("\tCreating Test Profile");
-    }
-
-    /**
-     * Console input for command option.
-     * @return  input code, -1 if bad input
-     * */
-    private int getTestInput() {
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        if (input.matches("0")) return 0;
-        if (input.matches("1")) return 1;
-        if (input.matches("2")) return 2;
-        if (input.matches("3")) return 3;
-        if (input.matches("4")) return 4;
-        if (input.matches("5")) return 5;
-        if (input.matches("6")) return 6;
-        if (input.matches("7")) return 7;
-        if (input.matches("8")) return 8;
-        if (input.matches("9")) return 9;
-        return -1;
     }
 }

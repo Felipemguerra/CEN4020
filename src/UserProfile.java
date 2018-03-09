@@ -7,7 +7,7 @@ import java.util.Scanner;
  * This class offers a way to access the user profile and
  * is where further iterations will continue.
  * */
-public class UserProfile {
+public class UserProfile{
 
     /**
      * stores first name from user profile
@@ -19,32 +19,26 @@ public class UserProfile {
      * */
     private String LastName;
 
-    /**
-     * 0: user mode
-     * 1: test mode
-     */
-    private int mode;
+    private int semesterCount = 0;
 
-    private int count = 0;
+    private String[] semesters = {};
 
     /**
      * Starts up the command menu and allows user to select several options
      * to access and edit user profile.
-     * @param   m   mode
      * */
-    public void startup(int m) {
-        mode = m;
+    public void startup() {
         populate();
         Major UserMajor = new Major();
-        int input;
+        String input;
         printProfileDashboard();
-        while((input = getInput()) != 6) {
-            if(input == 0) printProfileDashboard();
-            else if(input == 1) UserMajor.ShowMajor();
-            else if(input == 2) UserMajor.ShowProgress();
-            else if(input == 3) UserMajor.ChangeMajor(FirstName, LastName);
-            else if(input == 4) System.out.println("Showing GPA(Not Yet Implemented)");
-            else if(input == 5) Semesters();
+        while(!(input = getInput()).matches("6")) {
+            if(input.matches("0")) printProfileDashboard();
+            else if(input.matches("1")) UserMajor.ShowMajor();
+            else if(input.matches("2")) UserMajor.ShowProgress();
+            else if(input.matches("3")) UserMajor.ChangeMajor(FirstName, LastName);
+            else if(input.matches("4")) System.out.println("Showing GPA(Not Yet Implemented)");
+            else if(input.matches("5")) Semesters();
             else System.out.println("Sorry, Try Again.");
             System.out.println("Press 0 For Menu");
         }
@@ -70,19 +64,9 @@ public class UserProfile {
      * takes in input corresponding to Dashboard options
      * @return input code, -1 if bad input
      * */
-    private int getInput() {
+    private String getInput() {
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();/*
-        if (input.matches("0")) return 0;
-        if (input.matches("1")) return 1;
-        if (input.matches("2")) return 2;
-        if (input.matches("3")) return 3;
-        if (input.matches("4")) return 4;
-        if (input.matches("5")) return 5;
-        if (input.matches("6")) return 6;
-        return -1;*/
-        if (input.matches("[0-9]+")) return Integer.parseInt(input);
-        return -1;
+        return scanner.nextLine();
     }
 
     /**
@@ -90,7 +74,6 @@ public class UserProfile {
      * */
     private void printProfileDashboard() {
         System.out.println("---------------------------------------");
-        if (mode == 1)System.out.println("TEST");
         System.out.println("Hello " + FirstName + " " + LastName);
         System.out.println("\tEnter the Option Number");
         System.out.println("\t0: Show Menu");
@@ -98,21 +81,23 @@ public class UserProfile {
         System.out.println("\t2: Show Progress");
         System.out.println("\t3: Change Major");
         System.out.println("\t4: Show GPA(Not Yet Implemented)");
-        System.out.println("\t5: Go To Semesters(Not Yet Implemented)");
+        System.out.println("\t5: Go To Semesters");
         System.out.println("\t6: Go Back");
         System.out.println("---------------------------------------");
     }
 
     private void Semesters() {
+        getSemesters();
         printSemestersDashboard();
-        int input;
-        while((input = getInput()) != count+2) {
-            if(input == 0) printSemestersDashboard();
-            else if(input == 1) {
-                 System.out.println("Adding Semester");
-                 Semester newSemester = new Semester();
-                 newSemester.printSemesters();
-
+        String input;
+        while(!(input = getInput()).matches("q")) {
+            if(input.matches("\\+")) addSemester();
+            else if(input.matches("0")) printSemestersDashboard();
+            else if(input.matches("t")) makeTestSemesters();
+            else if(input.matches("[1-9]+")) {
+                int sem = Integer.parseInt(input);
+                if(sem > 0 && sem <= semesterCount) new Semester().startup(semesters[sem-1]);
+                else System.out.println("Sorry, Try Again.");
             }
             else System.out.println("Sorry, Try Again.");
             System.out.println("Press 0 For Menu");
@@ -121,17 +106,76 @@ public class UserProfile {
 
     private void printSemestersDashboard() {
         System.out.println("---------------------------------------");
+        System.out.println("\tq: Go Back");
+        System.out.println("\tt: Make Test Semesters");
+        System.out.println("\t+: Add Semester");
         System.out.println("\t0: Show Menu");
-        System.out.println("\t1: Add Semester");
-       // printSemesters();
-        int back;
-        if(count == 0) back = 2;
-        else back = count+2;
-        System.out.println("\t" + back + ": Go Back");
+        printSemesters();
         System.out.println("---------------------------------------");
     }
 
-   
+    private void printSemesters() {
+        for(int i = 0; i < semesterCount; ++i) {
+            System.out.println("\t" + (i+1) + ": " + semesters[i]);
+        }
+    }
 
-    private void makeTestSemesters() {}
+    private void getSemesters() {
+        File semesters = new File(System.getProperty("user.dir")+"/user_profile/semesters");
+        if(!semesters.exists()){ semesters.mkdir(); }
+        this.semesters = semesters.list();
+        semesterCount = this.semesters.length;
+    }
+
+    private void makeTestSemesters() {
+        //populate from valid_semesters file
+        System.out.println("making test semesters(not yet implemented)");
+    }
+
+    private void addSemester() {
+        File dir = new File(System.getProperty("user.dir") + "/user_profile/semesters");
+        boolean get = true;
+        String input = "";
+        while(get) {
+            get = false;
+            input = getSemesterInfo();
+            for(String i : semesters) {
+                if(i.matches(input)) {
+                    get = true;
+                    System.out.println("Semester Already Exists, Try Again");
+                    break;
+                }}
+        }
+        new Semester().addNewSemester(input);
+        getSemesters();
+    }
+
+    private String getSemesterInfo() {
+        Scanner scanner = new Scanner(System.in);
+        String semester = "", buffer = "";
+        boolean get = true;
+        while(get) {
+            get = false;
+            System.out.println("Enter Semester Name: ");
+            buffer = scanner.nextLine();
+            if(!buffer.matches("(?i)Fall") && !buffer.matches("(?i)Spring") && !buffer.matches("(?i)Spring")) {
+                get = true;
+                System.out.println("Bad Name, Try Again");
+            }
+        }
+        buffer = buffer.substring(0, 1).toUpperCase() + buffer.substring(1);
+        semester += buffer + " ";
+        get = true;
+        while(get) {
+            get = false;
+            System.out.println("Enter Semester Year: ");
+            buffer = scanner.nextLine();
+            if(!buffer.matches("[0-9][0-9][0-9][0-9]")) {
+                get = true;
+                System.out.println("Bad Year, Try Again");
+            }
+        }
+        semester += buffer;
+        return semester;
+    }
 }

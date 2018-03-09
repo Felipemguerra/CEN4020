@@ -6,35 +6,18 @@ import java.io.*;
 
 public class Semester {
 
-		/**
- 		* Prints semesters 
- 		* */
- 		public void printSemesters() {
-        File semesters = new File(System.getProperty("user.dir")+"/user_profile/semesters");
-        if(semesters.exists()){
-            try {
-                FileReader InputStream = new FileReader(semesters);
-                BufferedReader BuffReader = new BufferedReader(InputStream);
+    private File semester;
 
-                String buffer;
-                String[] line;
-                int counter = 2;
-
-                while((buffer = BuffReader.readLine()) != null) {
-                    line = buffer.split("\\+");
-                    System.out.println("\t" + counter + ": " + line[0] + " " + line[1]);
-                    counter++;
-                }
-                counter=counter-2;
-                BuffReader.close();
-            }
-            catch (FileNotFoundException FNF) {}
-            catch (IOException IOE) {}
-        }
+    public void startup(String name) {
+        semester = new File(System.getProperty("user.dir")+"/user_profile/semesters/"+name);
+        System.out.println("im here in" + name);
     }
 
-
-
-
-
+    public void addNewSemester(String name) {
+        File newSemester = new File(System.getProperty("user.dir") + "/user_profile/semesters/"+name);
+        try{
+            newSemester.createNewFile();
+        }
+        catch(IOException IOE) {}
+    }
 }
