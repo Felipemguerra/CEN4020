@@ -25,14 +25,13 @@ public class UserProfile{
 
     private int semesterCount = 0;
 
-    private String[] semesters = {};
+    private File[] semesters = {};
 
     private String C_DASH = "0";
     private String C_MAJOR = "1";
     private String C_PROG = "2";
     private String C_CHANGE = "3";
-    private String C_GPA = "4";
-    private String C_SEM = "5";
+    private String C_SEM = "4";
     private String C_QUIT = "q";
     private String C_ADD = "\\+";
 
@@ -49,9 +48,14 @@ public class UserProfile{
             if(input.matches(C_DASH)) printProfileDashboard();
             else if(input.matches(C_MAJOR)) UserMajor.ShowMajor();
             else if(input.matches(C_PROG)) UserMajor.ShowProgress();
-            else if(input.matches(C_CHANGE)) UserMajor.ChangeMajor(FirstName, LastName);
-            else if(input.matches(C_GPA)) System.out.println("Showing GPA(Not Yet Implemented)");
-            else if(input.matches(C_SEM)) Semesters();
+            else if(input.matches(C_CHANGE)) {
+                UserMajor.ChangeMajor(FirstName, LastName);
+                printProfileDashboard();
+            }
+            else if(input.matches(C_SEM)) {
+                Semesters();
+                printProfileDashboard();
+            }
             else System.out.println("Sorry, Try Again.");
             System.out.println("Press 0 For Menu");
         }
@@ -87,17 +91,23 @@ public class UserProfile{
      * */
     private void printProfileDashboard() {
         System.out.println("---------------------------------------");
+        System.out.println("\tGrade: " + getGrade());
+        System.out.println("---------------------------------------");
         System.out.println("Hello " + FirstName + " " + LastName);
         System.out.println("\tEnter the Option Number");
         System.out.println("\t0: Show Menu");
         System.out.println("\t1: Show Major");
         System.out.println("\t2: Show Progress");
         System.out.println("\t3: Change Major");
-        System.out.println("\t4: Show GPA(Not Yet Implemented)");
-        System.out.println("\t5: Go To Semesters");
+        System.out.println("\t4: Go To Semesters");
         System.out.println("\tq: Go Back");
         System.out.println("---------------------------------------");
     }
+
+    private static long getGrade() {
+        return 0;
+    }
+
 
     private void Semesters() {
         getSemesters();
@@ -108,7 +118,10 @@ public class UserProfile{
             else if(input.matches(C_DASH)) printSemestersDashboard();
             else if(input.matches("[1-9]+")) {
                 int sem = Integer.parseInt(input);
-                if(sem > 0 && sem <= semesterCount) new Semester().startup(semesters[sem-1]);
+                if(sem > 0 && sem <= semesterCount) {
+                    new Semester().startup(semesters[sem-1]);
+                    printSemestersDashboard();
+                }
                 else System.out.println("Sorry, Try Again.");
             }
             else System.out.println("Sorry, Try Again.");
@@ -127,15 +140,15 @@ public class UserProfile{
 
     private void printSemesters() {
         for(int i = 0; i < semesterCount; ++i) {
-            System.out.println("\t" + (i+1) + ": " + semesters[i]);
+            System.out.println("\t" + (i+1) + ": " + semesters[i].getName());
         }
     }
 
     private void getSemesters() {
-        File semesters = new File(System.getProperty("user.dir")+"/user_profile/semesters");
-        if(!semesters.exists()){ semesters.mkdir(); }
-        this.semesters = semesters.list();
-        semesterCount = this.semesters.length;
+        File sems = new File(System.getProperty("user.dir")+"/user_profile/semesters");
+        if(!sems.exists()){ sems.mkdir(); }
+        semesters = sems.listFiles();
+        semesterCount = semesters.length;
     }
 
     private void addSemester() {
@@ -145,8 +158,8 @@ public class UserProfile{
         while(get) {
             get = false;
             input = getSemesterFromConsole();
-            for(String i : semesters) {
-                if(i.matches(input)) {
+            for(File i : semesters) {
+                if(i.getName().matches(input)) {
                     get = true;
                     System.out.println("Semester Already Exists, Try Again");
                     break;

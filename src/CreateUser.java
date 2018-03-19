@@ -227,14 +227,6 @@ public class CreateUser {
             buffer = scanner.nextLine();
         }
         input += buffer;
-        input+= "+";
-        System.out.println("\tEnter the grade you received ie. A-)");
-        buffer = scanner.nextLine();
-        while (!checkGrade(buffer)){
-            System.out.println("Bad Grade, Try Again");
-            buffer = scanner.nextLine();
-        }
-        input += buffer;
         return input;
     }
 
@@ -312,14 +304,6 @@ public class CreateUser {
         if (s.matches("")) return false;
         if(s.matches("[\\s]+")) return false;
         if(!s.matches("[1-9]")) return false;
-        return true;
-    }
-
-    public boolean checkGrade(String s) {
-        if (s == null) return false;
-        if (s.matches("")) return false;
-        if (s.matches("[\\s]+")) return false;
-        if(!s.matches("(A|A-|B+|B|B-|C+|C|C-|D+|D|D-|F)")) return false;
         return true;
     }
 }

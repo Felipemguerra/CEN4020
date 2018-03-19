@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class Semester {
 
-    private File semester;
+    private File Semester;
 
-    private String[] classes = {};
+    private File[] classes = {};
 
     private int classCount = 0;
 
@@ -18,17 +18,23 @@ public class Semester {
     private String C_ADD = "\\+";
     private String C_DASH = "0";
 
-    public void startup(String name) {
-        semester = new File(UserProfile.semestersPath+name);
+    public void startup(File semester) {
+        Semester = semester;
         getClasses();
         printClassesDashboard();
         String input;
         while(!(input = getInput()).matches(C_QUIT)) {
-            if(input.matches(C_ADD)) addClass();
+            if(input.matches(C_ADD)) {
+                addClass();
+                printClassesDashboard();
+            }
             else if(input.matches(C_DASH)) printClassesDashboard();
             else if(input.matches("[1-9]+")) {
                 int sem = Integer.parseInt(input);
-                if(sem > 0 && sem <= classCount) new Class().startup(semester.getAbsolutePath() + "/" + classes[sem-1]);
+                if(sem > 0 && sem <= classCount) {
+                    new Class().startup(classes[sem-1]);
+                    printClassesDashboard();
+                }
                 else System.out.println("Sorry, Try Again.");
             }
             else System.out.println("Sorry, Try Again.");
@@ -43,6 +49,8 @@ public class Semester {
 
     private void printClassesDashboard() {
         System.out.println("---------------------------------------");
+        System.out.println("\tGrade: " + getSemesterGrade(Semester));
+        System.out.println("---------------------------------------");
         System.out.println("\t"+C_QUIT+": Go Back");
         System.out.println("\t+: Add Class");
         System.out.println("\t0: Show Menu");
@@ -52,13 +60,13 @@ public class Semester {
 
     private void printClasses() {
         for(int i = 0; i < classCount; ++i) {
-            System.out.println("\t" + (i+1) + ": " + classes[i]);
+            System.out.println("\t" + (i+1) + ": " + classes[i].getName());
         }
     }
 
     private void getClasses() {
-        this.classes = semester.list();
-        classCount = this.classes.length;
+        classes = Semester.listFiles();
+        classCount = classes.length;
     }
 
     private void addClass() {
@@ -67,8 +75,8 @@ public class Semester {
         while(get) {
             get = false;
             input = getClassFromConsole();
-            for(String i : classes) {
-                if(i.matches(input)) {
+            for(File i : classes) {
+                if(i.getName().matches(input)) {
                     get = true;
                     System.out.println("Class Already Exists, Try Again");
                     break;
@@ -80,7 +88,7 @@ public class Semester {
     }
 
     private void addNewClass(String name) {
-        File newSemester = new File(semester.getAbsolutePath() + "/" +name);
+        File newSemester = new File(Semester.getAbsolutePath() + "/" +name);
         newSemester.mkdir();
     }
 
@@ -111,5 +119,9 @@ public class Semester {
         }
         className += buffer;
         return className;
+    }
+
+    public static long getSemesterGrade(File semester) {
+        return 0;
     }
 }

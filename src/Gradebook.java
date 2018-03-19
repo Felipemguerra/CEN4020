@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-//import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FileUtils;
 
 /*Implemented by: Felipe and Redden*/
 
@@ -125,10 +125,10 @@ public class Gradebook {
         File test_user = new File(System.getProperty("user.dir")+"/test/user_profile");
         if(!test_user.exists()) return false;
         else
-           // try{
-              //  FileUtils.copyDirectory(test_user, UserDir);
-           // }
-           // catch(IOException IOE) { return false;}
+            try{
+                FileUtils.copyDirectory(test_user, UserDir);
+            }
+            catch(IOException IOE) { return false;}
         return true;
     }
 }
