@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import org.apache.commons.io.FileUtils;
 
 /*Implemented by: Felipe and Redden*/
 
@@ -56,13 +57,16 @@ public class Gradebook {
                 UserExists = false;
             }
             else if(input.matches("3") && UserExists) {
-                if(!createUser.createTestUser()) System.out.println("User has not been overwritten");
+                //if(!createUser.createTestUser()) System.out.println("User has not been overwritten");
+                if(!makeTestUser()) System.out.println("Missing Test Profile");
             }
             else if(input.matches("2") && !UserExists) {
-                UserDir.mkdir();
-                if(!createUser.createTestUser()) {deleteDir(UserDir);
-                System.out.println("Test User not created");}
-                else UserExists = true;
+                //UserDir.mkdir();
+                //if(!createUser.createTestUser()) {deleteDir(UserDir);
+                //System.out.println("Test User not created");}
+                //else UserExists = true;
+                if(!makeTestUser()) System.out.println("Missing Test Profile");
+                UserExists = true;
             }
             else System.out.println("Sorry, Try Again.");
             printDashboard();
@@ -115,5 +119,16 @@ public class Gradebook {
     private static String getInput() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
+    }
+
+    private static boolean makeTestUser() {
+        File test_user = new File(System.getProperty("user.dir")+"/test/user_profile");
+        if(!test_user.exists()) return false;
+        else
+            try{
+                FileUtils.copyDirectory(test_user, UserDir);
+            }
+            catch(IOException IOE) { return false;}
+        return true;
     }
 }

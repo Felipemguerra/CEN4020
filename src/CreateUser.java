@@ -306,21 +306,4 @@ public class CreateUser {
         if(!s.matches("[1-9]")) return false;
         return true;
     }
-
-    /*
-    *
-    * Test Profile Methods
-    *
-    * */
-
-    /**
-     * Run when the user chooses to run tests from main
-     * gradebook command prompt.  Takes input to get test
-     * to be run.  Returns a valid test user to continue testing.
-     * @return   whether valid_user file is valid
-     * */
-    public boolean createTestUser() {
-        System.out.println("\tCreating Test Profile");
-        return populateFromFile(new File(System.getProperty("user.dir") + "/test_files/valid_user"));
-    }
 }

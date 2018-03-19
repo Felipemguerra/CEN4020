@@ -11,6 +11,8 @@ public class UserProfile{
 
     public static String userPath = Gradebook.userPath+"user";
 
+    public static String semestersPath = Gradebook.userPath+"semesters/";
+
     /**
      * stores first name from user profile
      * */
@@ -32,7 +34,6 @@ public class UserProfile{
     private String C_GPA = "4";
     private String C_SEM = "5";
     private String C_QUIT = "q";
-    private String C_TEST = "t";
     private String C_ADD = "\\+";
 
     /**
@@ -105,7 +106,6 @@ public class UserProfile{
         while(!(input = getInput()).matches(C_QUIT)) {
             if(input.matches(C_ADD)) addSemester();
             else if(input.matches(C_DASH)) printSemestersDashboard();
-            else if(input.matches(C_TEST)) makeTestSemesters();
             else if(input.matches("[1-9]+")) {
                 int sem = Integer.parseInt(input);
                 if(sem > 0 && sem <= semesterCount) new Semester().startup(semesters[sem-1]);
@@ -119,8 +119,7 @@ public class UserProfile{
     private void printSemestersDashboard() {
         System.out.println("---------------------------------------");
         System.out.println("\t"+C_QUIT+": Go Back");
-        System.out.println("\t"+C_TEST+": Make Test Semesters");
-        System.out.println("\t"+C_ADD+": Add Semester");
+        System.out.println("\t+: Add Semester");
         System.out.println("\t0: Show Menu");
         printSemesters();
         System.out.println("---------------------------------------");
@@ -139,11 +138,6 @@ public class UserProfile{
         semesterCount = this.semesters.length;
     }
 
-    private void makeTestSemesters() {
-        //populate from valid_semesters file
-        System.out.println("making test semesters(not yet implemented)");
-    }
-
     private void addSemester() {
         File dir = new File(System.getProperty("user.dir") + "/user_profile/semesters");
         boolean get = true;
@@ -158,8 +152,13 @@ public class UserProfile{
                     break;
                 }}
         }
-        new Semester().addNewSemester(input);
+        addNewSemester(input);
         getSemesters();
+    }
+
+    private void addNewSemester(String name) {
+        File newSemester = new File(semestersPath + name);
+        newSemester.mkdir();
     }
 
     private String getSemesterFromConsole() {
@@ -170,7 +169,7 @@ public class UserProfile{
             get = false;
             System.out.println("Enter Semester Name: ");
             buffer = scanner.nextLine();
-            if(!buffer.matches("(?i)Fall") && !buffer.matches("(?i)Spring") && !buffer.matches("(?i)Spring")) {
+            if(!buffer.matches("(?i)Fall") && !buffer.matches("(?i)Spring") && !buffer.matches("(?i)Summer")) {
                 get = true;
                 System.out.println("Bad Name, Try Again");
             }
