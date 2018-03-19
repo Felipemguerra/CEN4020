@@ -25,7 +25,7 @@ public class Major {
             String[] split;
             while (buffer != null) {
                 split = buffer.split("\\+");
-                System.out.println("\t" + split[0] + "-" + split[1] + ": " + split[2] + " [" + split[3] + " Credit Hours]");
+                System.out.println("\t" + split[0] + "-" + split[1] + ": " + split[2] + " [" + split[3] + " Credit Hours] " + split[4]);
                 buffer = BuffReader.readLine();
             }
             System.out.println("---------------------------------------");
