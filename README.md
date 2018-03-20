@@ -16,7 +16,3 @@ Software Engineering Group Project
 # Acceptance tests:
 - any acceptance testing can be done by creating a user and giving input
                   and checking for error output
-
-# GUI
-- current user interface is based on command prompt and user input, gui will 
-					added in later iterations

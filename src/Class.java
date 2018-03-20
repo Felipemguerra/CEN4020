@@ -1,4 +1,5 @@
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class Class {
@@ -39,7 +40,7 @@ public class Class {
 
     private void printClassDashboard() {
         System.out.println("---------------------------------------");
-        System.out.println("\tGrade: " + getClassGrade(Class));
+        System.out.println("\tGrade: " + getClassGrade(Class).substring(0,5));
         System.out.println("---------------------------------------");
         System.out.println("\tq: Go Back");
         System.out.println("\tf: Mark Class As Finished");
@@ -181,7 +182,52 @@ public class Class {
         return true;
     }
 
-    public static long getClassGrade(File classfile) {
-        return 0;
+    public static String getClassGrade(File classfile) {
+        String[] sectionInfo = {};
+        String creditHours = "";
+        try {
+            int total = 0;
+            File classinfo = new File(classfile.getAbsolutePath()+"/class");
+            BufferedReader BuffReader = new BufferedReader(new FileReader(classinfo));
+            String buffer = BuffReader.readLine();
+            creditHours = buffer;
+            buffer = BuffReader.readLine();
+            while(!buffer.matches("0") && !buffer.matches("1")) {
+                total++;
+                buffer = BuffReader.readLine();
+            }
+            sectionInfo = new String[total];
+            BuffReader.close();
+
+            total = 0;
+            BuffReader = new BufferedReader(new FileReader(classfile.getAbsolutePath()+"/class"));
+            buffer = BuffReader.readLine();
+            buffer = BuffReader.readLine();
+            while(!buffer.matches("0") && !buffer.matches("1")) {
+                sectionInfo[total] = buffer;
+                buffer = BuffReader.readLine();
+                total++;
+            }
+            BuffReader.close();
+        }
+        catch(IOException IOE) {}
+        File[] sections = classfile.listFiles();
+        float grade, total = 0;
+        for(File i : sections) {
+            if(!i.getName().matches("class")) {
+                grade = Section.getSectionGrade(i);
+                if(grade != -1) {
+                    for (String s : sectionInfo) {
+                        if (s.split("\\+")[0].matches(i.getName())) {
+                            grade = grade * Integer.parseInt(s.split("\\+")[1]);
+                            total += grade;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return String.valueOf(total)+"+"+creditHours;
     }
 }

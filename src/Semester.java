@@ -49,8 +49,6 @@ public class Semester {
 
     private void printClassesDashboard() {
         System.out.println("---------------------------------------");
-        System.out.println("\tGrade: " + getSemesterGrade(Semester));
-        System.out.println("---------------------------------------");
         System.out.println("\t"+C_QUIT+": Go Back");
         System.out.println("\t+: Add Class");
         System.out.println("\t0: Show Menu");
@@ -121,7 +119,14 @@ public class Semester {
         return className;
     }
 
-    public static long getSemesterGrade(File semester) {
-        return 0;
+    public static String[] getSemesterGrade(File semester) {
+        String[] grades = new String[semester.list().length];
+        File[] classes = semester.listFiles();
+        int index = 0;
+        for(File i : classes) {
+            grades[index] = Class.getClassGrade(i);
+            index++;
+        }
+        return grades;
     }
 }

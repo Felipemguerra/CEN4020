@@ -91,7 +91,7 @@ public class UserProfile{
      * */
     private void printProfileDashboard() {
         System.out.println("---------------------------------------");
-        System.out.println("\tGrade: " + getGrade());
+        System.out.println("\tGPA: " + getGrade(new File(semestersPath)));
         System.out.println("---------------------------------------");
         System.out.println("Hello " + FirstName + " " + LastName);
         System.out.println("\tEnter the Option Number");
@@ -104,8 +104,41 @@ public class UserProfile{
         System.out.println("---------------------------------------");
     }
 
-    private static long getGrade() {
-        return 0;
+    private static float getGrade(File semDir) {
+        File[] semesters = semDir.listFiles();
+        float grade = 0, semGrade = 0;
+        int creditHours = 0;
+        String[] grades;
+        for(int i = 0; i < semesters.length; ++i) {
+            grades = Semester.getSemesterGrade(semesters[i]);
+            for(int e = 0; e < grades.length; ++e) {
+                creditHours+= Integer.parseInt(grades[i].split("\\+")[1]);
+                semGrade += getPoints(grades[e]);
+            }
+            grade += semGrade;
+            semGrade = 0;
+        }
+        grade /= creditHours;
+        return grade;
+    }
+
+    private static double getPoints(String classGrade) {
+        float points;
+        float grade = Float.parseFloat(classGrade.split("\\+")[0]);
+        if(grade >= 93) points = (float)4.00;
+        else if(grade >= 90) points = (float)3.75;
+        else if(grade >= 87) points = (float)3.25;
+        else if(grade >= 83) points = (float)3.00;
+        else if(grade >= 80) points = (float)2.75;
+        else if(grade >= 77) points = (float)2.25;
+        else if(grade >= 73) points = (float)2.00;
+        else if(grade >= 70) points = (float)1.75;
+        else if(grade >= 67) points = (float)1.25;
+        else if(grade >= 63) points = (float)1.00;
+        else if(grade >= 60) points = (float)0.75;
+        else points = (float)0.00;
+        points *= Integer.parseInt(classGrade.split("\\+")[1]);
+        return points;
     }
 
 

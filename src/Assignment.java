@@ -26,13 +26,24 @@ public class Assignment {
         return scanner.nextLine();
     }
 
-    public static long getGrade(File assignment) {
-        return 0;
+    public static float getGrade(File assignment) {
+        float grade = 0;
+        try {
+            String[] buffer;
+            BufferedReader BuffReader = new BufferedReader(new FileReader(assignment));
+            buffer = BuffReader.readLine().split("\\+");
+            BuffReader.close();
+            if(buffer[0].matches("-1")) return -1;
+            grade = Float.parseFloat(buffer[0])/Float.parseFloat(buffer[1]);
+        }
+        catch(IOException IOE) {}
+        return grade;
     }
 
     private static void printAssignmentDashboard() {
         System.out.println("---------------------------------------");
-        System.out.println("\tGrade: " + getGrade(Assignment));
+        if(getGrade(Assignment) == -1) System.out.println("\tNo Grade");
+        else System.out.println("\tGrade: " + String.format("%.2f",(getGrade(Assignment)*100)));
         System.out.println("---------------------------------------");
         System.out.println("\tq: Go Back");
         System.out.println("\tc: Change Grade");

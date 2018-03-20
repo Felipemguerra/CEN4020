@@ -1,7 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class Section {
@@ -50,7 +47,8 @@ public class Section {
 
     private static void printSectionDashboard() {
         System.out.println("---------------------------------------");
-        System.out.println("\tGrade: " + getSectionGrade(Section));
+        if(getSectionGrade(Section) == -1) System.out.println("\tNo Grade");
+        else System.out.println("\tGrade: " + String.format("%.2f",(getSectionGrade(Section)*100)));
         System.out.println("---------------------------------------");
         System.out.println("\tq: Go Back");
         System.out.println("\t+: Add Assignment");
@@ -122,8 +120,21 @@ public class Section {
         catch(IOException IOE) {}
     }
 
-    public static long getSectionGrade(File section) {
-        //use getGrade from all assignments to get section grade
-        return 0;
+    public static float getSectionGrade(File section) {
+        File[] files = section.listFiles();
+        float grade = 0;
+        int total = 0;
+        boolean nullFile = true;
+        if(files.length == 0) return -1;
+        for(int i =0; i < files.length; ++i) {
+            if(Assignment.getGrade(files[i]) >= 0) {
+                grade += Assignment.getGrade(files[i]);
+                total++;
+                nullFile = false;
+            }
+        }
+        if(nullFile) return -1;
+        grade /= total;
+        return grade;
     }
 }
