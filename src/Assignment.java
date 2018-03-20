@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.Scanner;
 
+/*
+* implemented by Felipe and Brian
+*/
 public class Assignment {
     static private File Assignment;
 

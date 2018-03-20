@@ -2,6 +2,10 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
+/*
+* implemented by Daniel and Redden
+*/
+
 public class Class {
 
     private File Class;

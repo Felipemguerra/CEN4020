@@ -1,6 +1,10 @@
 import java.io.*;
 import java.util.Scanner;
 
+/*
+* implemented by Redden and Brian
+*/
+
 public class Section {
 
     static private File Section;

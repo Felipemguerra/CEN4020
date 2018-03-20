@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 /**
  * A class that offers functionality to add and view a semester
+ * implemented by Felipe and Daniel
  * */
 
 public class Semester {
