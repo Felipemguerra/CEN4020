@@ -1,7 +1,12 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import org.apache.commons.io.FileUtils;
+
+import javax.swing.*;
 
 /*Implemented by: Felipe and Redden*/
 
@@ -14,7 +19,7 @@ import org.apache.commons.io.FileUtils;
  * profile input.
  */
 
-public class Gradebook {
+public class Gradebook extends JFrame implements ActionListener{
 
     /**
      * used to keep track of existing user
@@ -24,54 +29,120 @@ public class Gradebook {
     public static File UserDir;
     public static String userPath = System.getProperty("user.dir")+"/user_profile/";
 
+    private static Container container;
+    private static JButton accessBtn;
+    private static JButton testBtn;
+    private static JButton resetBtn;
+    private static JButton exitBtn;
+    private static JButton createBtn;
+
+    private static Gradebook gb;
+
+    public Gradebook() {
+        super();
+
+        //gradebook stuff
+        UserDir = new File(userPath);
+        if (UserDir.exists()) { UserExists = true; }
+        CreateUser createUser = new CreateUser();
+
+        //gui stuff
+        setName("Gradebook");
+        setVisible(true);
+        setSize(600,400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        assignButtons();
+        container = getContentPane();
+        setComponents();
+    }
+
+    private void assignButtons() {
+        accessBtn = new JButton();
+        accessBtn.setText("Access User Profile");
+        accessBtn.addActionListener(this);
+        testBtn = new JButton();
+        testBtn.setText("Create Test Profile");
+        testBtn.addActionListener(this);
+        resetBtn = new JButton();
+        resetBtn.setText("Reset Profile");
+        resetBtn.addActionListener(this);
+        exitBtn = new JButton();
+        exitBtn.setText("Exit");
+        exitBtn.addActionListener(this);
+        createBtn = new JButton();
+        createBtn.setText("Create User Profile");
+        createBtn.addActionListener(this);
+    }
+
+    private void setComponents() {
+        container.removeAll();
+        container.setLayout(new GridLayout(4,2));
+        JPanel[][] panels = new JPanel[4][2];
+        for(int i = 0; i < 4; ++i) {
+            for(int e = 0; e < 2; ++e) {
+                panels[i][e] = new JPanel();
+                add(panels[i][e]);
+            }
+        }
+        if(UserExists) {
+            accessBtn.setEnabled(true);
+            resetBtn.setEnabled(true);
+            testBtn.setEnabled(true);
+            exitBtn.setEnabled(true);
+            createBtn.setEnabled(false);
+            panels[0][0].add(accessBtn);
+            panels[1][0].add(resetBtn);
+            panels[2][0].add(testBtn);
+            panels[3][0].add(exitBtn);
+        }
+        else {
+            accessBtn.setEnabled(false);
+            resetBtn.setEnabled(false);
+            testBtn.setEnabled(true);
+            exitBtn.setEnabled(true);
+            createBtn.setEnabled(true);
+            panels[0][0].add(createBtn);
+            panels[1][0].add(testBtn);
+            panels[2][0].add(exitBtn);
+        }
+        repaint();
+        validate();
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if(ae.getSource() == accessBtn) {
+            UserProfile user = new UserProfile();
+            user.startup();
+        }
+        else if(ae.getSource() == createBtn) {
+            CreateUser createUser = new CreateUser();
+            UserExists = true;
+            UserDir.mkdir();
+            createUser.createNewUser();
+        }
+        else if(ae.getSource() == resetBtn) {
+            deleteDir(UserDir);
+            UserExists = false;
+        }
+        else if(ae.getSource() == testBtn) {
+            if(!makeTestUser()) System.out.println("Missing Test Profile");
+            else {
+                if(!UserExists) UserExists = true;
+            }
+        }
+        else if(ae.getSource() == exitBtn) {
+            System.exit(0);
+        }
+        setComponents();
+    }
+
     /**
      * Main function for program.  Prints welcome and goodbye
      * messages and calls startup from a Gradebook object.
      * @param   args    command line arguments(unused)
      * */
     public static void main(String[] args) {
-        System.out.println("---------------------------------------");
-        System.out.println("\tWelcome To GradeBook");
-        System.out.println("---------------------------------------");
-        UserDir = new File(userPath);
-
-        if (UserDir.exists()) { UserExists = true; }
-
-        CreateUser createUser = new CreateUser();
-
-        String input;
-        printDashboard();
-        while(!(input = getInput()).matches("q")) {
-
-            if (input.matches("1") && UserExists) {
-                UserProfile user = new UserProfile();
-                user.startup();
-            }
-            else if(input.matches("1") && !UserExists){
-                UserExists = true;
-                UserDir.mkdir();
-                createUser.createNewUser();
-            }
-            else if(input.matches("2") && UserExists) {
-                deleteDir(UserDir);
-                UserExists = false;
-            }
-            else if(input.matches("3") && UserExists) {
-                //if(!createUser.createTestUser()) System.out.println("User has not been overwritten");
-                if(!makeTestUser()) System.out.println("Missing Test Profile");
-            }
-            else if(input.matches("2") && !UserExists) {
-                //UserDir.mkdir();
-                //if(!createUser.createTestUser()) {deleteDir(UserDir);
-                //System.out.println("Test User not created");}
-                //else UserExists = true;
-                if(!makeTestUser()) System.out.println("Missing Test Profile");
-                UserExists = true;
-            }
-            else System.out.println("Sorry, Try Again.");
-            printDashboard();
-        }
-        System.out.println("Thank You For Using GradeBook!");
+        gb = new Gradebook();
     }
 
     /**
@@ -87,38 +158,6 @@ public class Gradebook {
             }
         }
         return dir.delete();
-    }
-
-    /**
-     * Simple printing function that prints the command
-     * dashboard to the console.
-     * Different command options are printed if a user
-     * profile has been created.
-     * */
-    private static void printDashboard() {
-        System.out.println("---------------------------------------");
-        System.out.println("\tEnter the Option Number:");
-        if(UserExists) {
-            System.out.println("\t1: Access User Profile");
-            System.out.println("\t2: Reset User Profile(Will Delete Current User)");
-            System.out.println("\t3: Create Test Profile(Will OverWrite Current User)");
-            System.out.println("\tq: Exit");
-        } else {
-            System.out.println("\t1: Create User Profile");
-            System.out.println("\t2: Create Test Profile");
-            System.out.println("\tq: Exit");
-        }
-        System.out.println("---------------------------------------");
-    }
-
-    /**
-     * Scans the command input for specific command options 1-4.
-     * If bad input is given, 0 is returned.
-     * @return      input code corresponding to command option
-     * */
-    private static String getInput() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
     }
 
     private static boolean makeTestUser() {
