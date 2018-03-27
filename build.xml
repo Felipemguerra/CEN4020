@@ -29,14 +29,16 @@
     <target name="jar" depends="build">
         <mkdir dir="build/jar"/>
         <jar destfile="build/jar/Gradebook.jar" basedir="build/main">
-            <manifest>
-                <attribute name="Main-Class" value="Gradebook"/>
+        	<zipgroupfileset dir="lib" includes="*.jar"/>
+			<manifest>
+        	        <attribute name="Main-Class" value="Gradebook"/>
             </manifest>
         </jar>
     </target>
 
     <target name="run" depends="jar">
-        <java jar="build/jar/Gradebook.jar" fork="true"/>
+        <java jar="build/jar/Gradebook.jar" fork="true">
+	</java>
     </target>
 
     <target name="test-run" depends="test-build">

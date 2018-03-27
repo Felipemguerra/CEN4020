@@ -105,8 +105,11 @@ public class UserProfile{
     }
 
     private static float getGrade(File semDir) {
+        float grade = 0;
+        if(semDir.exists())
+        {
         File[] semesters = semDir.listFiles();
-        float grade = 0, semGrade = 0;
+        float semGrade = 0;
         int creditHours = 0;
         String[] grades;
         for(int i = 0; i < semesters.length; ++i) {
@@ -119,6 +122,7 @@ public class UserProfile{
             semGrade = 0;
         }
         grade /= creditHours;
+        }
         return grade;
     }
 
