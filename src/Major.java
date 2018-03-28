@@ -7,13 +7,13 @@ import java.io.*;
  * */
 public class Major {
 
-    public static String majorPath = Gradebook.userPath+"major";
-    public static String progressPath = Gradebook.userPath+"progress";
+    public static String majorPath = StartMenu.userPath+"major";
+    public static String progressPath = StartMenu.userPath+"progress";
 
     /**
      * Prints major from user profile.
      * */
-    public void ShowMajor() {
+    public static void ShowMajor() {
         File TestUserFile = new File(majorPath);
         try {
             FileReader InputStream = new FileReader(TestUserFile);
@@ -38,7 +38,7 @@ public class Major {
     /**
      * prints progress from progress file in user profile.
      */
-    public void ShowProgress() {
+    public static void ShowProgress() {
         File TestUserFile = new File(progressPath);
         try {
             FileReader InputStream = new FileReader(TestUserFile);
@@ -80,7 +80,7 @@ public class Major {
      * @param first first name to keep name when changing major
      * @param last last name to keep name when changing major
      * */
-    public void ChangeMajor(String first, String last) {
+    public static void ChangeMajor(String first, String last) {
         new CreateUser().populateFromConsole(first+"\n"+last);
     }
 
@@ -114,7 +114,7 @@ public class Major {
 
         if(!found) return false;
         else {
-            File tempProg = new File(Gradebook.userPath+"temp");
+            File tempProg = new File(StartMenu.userPath+"temp");
             try {
                 BufferedReader BuffReader = new BufferedReader(new FileReader(progress));
                 BufferedWriter BuffWriter = new BufferedWriter(new FileWriter(tempProg));

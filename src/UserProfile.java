@@ -1,3 +1,7 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Scanner;
 
@@ -7,64 +11,118 @@ import java.util.Scanner;
  * This class offers a way to access the user profile and
  * is where further iterations will continue.
  * */
-public class UserProfile{
+public class UserProfile extends JPanel implements ActionListener{
 
-    public static String userPath = Gradebook.userPath+"user";
-
-    public static String semestersPath = Gradebook.userPath+"semesters/";
+    public static String userPath = StartMenu.userPath+"user";
 
     /**
      * stores first name from user profile
      * */
-    private String FirstName;
+    private static String FirstName;
 
     /**
      * stores last name from user profile
      * */
-    private String LastName;
+    private static String LastName;
 
-    private int semesterCount = 0;
+    private static JButton majorBtn;
+    private static JButton progressBtn;
+    private static JButton changeBtn;
+    private static JButton semestersBtn;
+    private static JButton backBtn;
 
-    private File[] semesters = {};
-
-    private String C_DASH = "0";
-    private String C_MAJOR = "1";
-    private String C_PROG = "2";
-    private String C_CHANGE = "3";
-    private String C_SEM = "4";
-    private String C_QUIT = "q";
-    private String C_ADD = "\\+";
 
     /**
      * Starts up the command menu and allows user to select several options
      * to access and edit user profile.
      * */
-    public void startup() {
-        getName();
-        Major UserMajor = new Major();
-        String input;
-        printProfileDashboard();
-        while(!(input = getInput()).matches(C_QUIT)) {
-            if(input.matches(C_DASH)) printProfileDashboard();
-            else if(input.matches(C_MAJOR)) UserMajor.ShowMajor();
-            else if(input.matches(C_PROG)) UserMajor.ShowProgress();
-            else if(input.matches(C_CHANGE)) {
-                UserMajor.ChangeMajor(FirstName, LastName);
-                printProfileDashboard();
+    public UserProfile() {
+        getUserName();
+        assignButtons();
+        setComponents();
+        setVisible(true);
+    }
+
+    private void assignButtons() {
+        majorBtn = new JButton();
+        majorBtn.setText("View Your Major");
+        majorBtn.addActionListener(this);
+        progressBtn = new JButton();
+        progressBtn.setText("View Your Progress");
+        progressBtn.addActionListener(this);
+        changeBtn = new JButton();
+        changeBtn.setText("Change Your Major");
+        changeBtn.addActionListener(this);
+        semestersBtn = new JButton();
+        semestersBtn.setText("Go To Semesters");
+        semestersBtn.addActionListener(this);
+        backBtn = new JButton();
+        backBtn.setText("Go Back");
+        backBtn.addActionListener(this);
+    }
+
+    private void setComponents() {
+        removeAll();
+        setLayout(new GridLayout(5,2,0,0));
+
+        JPanel[][] panels = new JPanel[5][2];
+        for(int i = 0; i < 5; ++i) {
+            for(int e = 0; e < 2; ++e) {
+                panels[i][e] = new JPanel();
+                add(panels[i][e]);
             }
-            else if(input.matches(C_SEM)) {
-                Semesters();
-                printProfileDashboard();
-            }
-            else System.out.println("Sorry, Try Again.");
-            System.out.println("Press 0 For Menu");
         }
+
+        JLabel welcome = new JLabel("Hello "+FirstName+" "+LastName);
+        welcome.setFont(new Font("name",1,20));
+        panels[2][0].add(welcome);
+
+        JLabel instruct = new JLabel("Choose an Option:");
+        welcome.setFont(new Font("details",0,14));
+        panels[2][0].add(instruct);
+
+        JLabel gpa = new JLabel("GPA: " + getGrade(new File(Semesters.semestersPath)));
+        welcome.setFont(new Font("gpa",1,20));
+        panels[3][0].add(gpa);
+
+        majorBtn.setEnabled(true);
+        progressBtn.setEnabled(true);
+        changeBtn.setEnabled(true);
+        semestersBtn.setEnabled(true);
+        backBtn.setEnabled(true);
+        panels[0][1].add(majorBtn);
+        panels[1][1].add(progressBtn);
+        panels[2][1].add(changeBtn);
+        panels[3][1].add(semestersBtn);
+        panels[4][1].add(backBtn);
+
+        repaint();
+        validate();
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if(ae.getSource() == majorBtn) {
+            Major.ShowMajor();
+        }
+        else if(ae.getSource() == progressBtn) {
+            Major.ShowProgress();
+        }
+        else if(ae.getSource() == changeBtn) {
+            Major.ChangeMajor(FirstName,LastName);
+        }
+        else if(ae.getSource() == semestersBtn) {
+            new Semesters();
+        }
+        else if(ae.getSource() == backBtn) {
+            Gradebook.changeToStartMenu();
+        }
+        setComponents();
     }
 
     /**takes the first and last name from the user profile in a given user directory
     * to populate the User Profile
      * */
-    private void getName() {
+    private static void getUserName() {
         File user = new File(System.getProperty("user.dir")+"/user_profile/user");
         try {
             FileReader InputStream = new FileReader(user);
@@ -75,33 +133,6 @@ public class UserProfile{
         }
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
-    }
-
-    /**
-     * takes in input corresponding to Dashboard options
-     * @return input code, -1 if bad input
-     * */
-    private String getInput() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
-    }
-
-    /**
-     * Command option printing method.
-     * */
-    private void printProfileDashboard() {
-        System.out.println("---------------------------------------");
-        System.out.println("\tGPA: " + getGrade(new File(semestersPath)));
-        System.out.println("---------------------------------------");
-        System.out.println("Hello " + FirstName + " " + LastName);
-        System.out.println("\tEnter the Option Number");
-        System.out.println("\t0: Show Menu");
-        System.out.println("\t1: Show Major");
-        System.out.println("\t2: Show Progress");
-        System.out.println("\t3: Change Major");
-        System.out.println("\t4: Go To Semesters");
-        System.out.println("\tq: Go Back");
-        System.out.println("---------------------------------------");
     }
 
     private static float getGrade(File semDir) {
@@ -143,100 +174,5 @@ public class UserProfile{
         else points = (float)0.00;
         points *= Integer.parseInt(classGrade.split("\\+")[1]);
         return points;
-    }
-
-
-    private void Semesters() {
-        getSemesters();
-        printSemestersDashboard();
-        String input;
-        while(!(input = getInput()).matches(C_QUIT)) {
-            if(input.matches(C_ADD)) addSemester();
-            else if(input.matches(C_DASH)) printSemestersDashboard();
-            else if(input.matches("[1-9]+")) {
-                int sem = Integer.parseInt(input);
-                if(sem > 0 && sem <= semesterCount) {
-                    new Semester().startup(semesters[sem-1]);
-                    printSemestersDashboard();
-                }
-                else System.out.println("Sorry, Try Again.");
-            }
-            else System.out.println("Sorry, Try Again.");
-            System.out.println("Press 0 For Menu");
-        }
-    }
-
-    private void printSemestersDashboard() {
-        System.out.println("---------------------------------------");
-        System.out.println("\t"+C_QUIT+": Go Back");
-        System.out.println("\t+: Add Semester");
-        System.out.println("\t0: Show Menu");
-        printSemesters();
-        System.out.println("---------------------------------------");
-    }
-
-    private void printSemesters() {
-        for(int i = 0; i < semesterCount; ++i) {
-            System.out.println("\t" + (i+1) + ": " + semesters[i].getName());
-        }
-    }
-
-    private void getSemesters() {
-        File sems = new File(System.getProperty("user.dir")+"/user_profile/semesters");
-        if(!sems.exists()){ sems.mkdir(); }
-        semesters = sems.listFiles();
-        semesterCount = semesters.length;
-    }
-
-    private void addSemester() {
-        File dir = new File(System.getProperty("user.dir") + "/user_profile/semesters");
-        boolean get = true;
-        String input = "";
-        while(get) {
-            get = false;
-            input = getSemesterFromConsole();
-            for(File i : semesters) {
-                if(i.getName().matches(input)) {
-                    get = true;
-                    System.out.println("Semester Already Exists, Try Again");
-                    break;
-                }}
-        }
-        addNewSemester(input);
-        getSemesters();
-    }
-
-    private void addNewSemester(String name) {
-        File newSemester = new File(semestersPath + name);
-        newSemester.mkdir();
-    }
-
-    private String getSemesterFromConsole() {
-        Scanner scanner = new Scanner(System.in);
-        String semester = "", buffer = "";
-        boolean get = true;
-        while(get) {
-            get = false;
-            System.out.println("Enter Semester Name: ");
-            buffer = scanner.nextLine();
-            if(!buffer.matches("(?i)Fall") && !buffer.matches("(?i)Spring") && !buffer.matches("(?i)Summer")) {
-                get = true;
-                System.out.println("Bad Name, Try Again");
-            }
-        }
-        buffer = buffer.substring(0, 1).toUpperCase() + buffer.substring(1);
-        semester += buffer + " ";
-        get = true;
-        while(get) {
-            get = false;
-            System.out.println("Enter Semester Year: ");
-            buffer = scanner.nextLine();
-            if(!buffer.matches("[0-9][0-9][0-9][0-9]")) {
-                get = true;
-                System.out.println("Bad Year, Try Again");
-            }
-        }
-        semester += buffer;
-        return semester;
     }
 }
