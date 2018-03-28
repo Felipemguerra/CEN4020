@@ -1,3 +1,7 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 
 /*Implemented by Daniel and Brian*/
@@ -5,84 +9,190 @@ import java.io.*;
 /**
  * A class that offers functionality to view and edit major.
  * */
-public class Major {
+public class Major extends JPanel implements ActionListener {
 
     public static String majorPath = StartMenu.userPath+"major";
     public static String progressPath = StartMenu.userPath+"progress";
 
+    private static String FirstName;
+    private static String LastName;
+
+    private static String Major;
+
+    private static JButton majorBtn;
+    private static JButton progressBtn;
+    private static JButton changeBtn;
+    private static JButton backBtn;
+
+    private static boolean showMajor = true;
+
+    private static JScrollPane scrollPane;
+
+    public Major() {
+        getUserName();
+        assignComponents();
+        setComponents();
+        setVisible(true);
+    }
+
+    private void assignComponents() {
+        majorBtn = new JButton();
+        majorBtn.setText("Show Major");
+        majorBtn.addActionListener(this);
+        progressBtn = new JButton();
+        progressBtn.setText("View Your Progress");
+        progressBtn.addActionListener(this);
+        changeBtn = new JButton();
+        changeBtn.setText("Change Your Major");
+        changeBtn.addActionListener(this);
+        backBtn = new JButton();
+        backBtn.setText("Go Back");
+        backBtn.addActionListener(this);
+        scrollPane = new JScrollPane();
+    }
+
+    private void setComponents() {
+        removeAll();
+
+        setLayout(new GridLayout(1, 2, 0, 0));
+
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new GridLayout(4, 1, 0, 0));
+
+        JPanel[][] panels = new JPanel[4][1];
+        for (int i = 0; i < 4; ++i) {
+            panels[i][0] = new JPanel();
+            buttons.add(panels[i][0]);
+        }
+        add(buttons);
+
+        getMajor();
+        JLabel major = new JLabel(Major);
+        major.setFont(new Font("majorLabel", 0, 18));
+        panels[0][0].add(major);
+
+        JLabel instruct = new JLabel("Choose an Option:");
+        instruct.setFont(new Font("details", 0, 14));
+        panels[0][0].add(instruct);
+
+        if (showMajor) {
+            majorBtn.setEnabled(false);
+            progressBtn.setEnabled(true);
+            panels[1][0].add(progressBtn);
+            scrollPane = new JScrollPane(getMajor());
+            scrollPane.setPreferredSize(new Dimension(300, 100));
+            add(scrollPane);
+        } else {
+            majorBtn.setEnabled(true);
+            progressBtn.setEnabled(false);
+            panels[1][0].add(majorBtn);
+            scrollPane = new JScrollPane(getProgress());
+            scrollPane.setPreferredSize(new Dimension(300, 100));
+            add(scrollPane);
+        }
+        changeBtn.setEnabled(true);
+        backBtn.setEnabled(true);
+
+        panels[2][0].add(changeBtn);
+        panels[3][0].add(backBtn);
+
+        repaint();
+        validate();
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if(ae.getSource() == majorBtn) {
+            showMajor = true;
+        }
+        else if(ae.getSource() == progressBtn) {
+            showMajor = false;
+        }
+        else if(ae.getSource() == changeBtn) {
+            Gradebook.changeToCreateUser();
+        }
+        else if(ae.getSource() == backBtn) {
+            Gradebook.changeToUserProfile();
+        }
+        setComponents();
+    }
+
     /**
      * Prints major from user profile.
      * */
-    public static void ShowMajor() {
+    public static JTextArea getMajor() {
         File TestUserFile = new File(majorPath);
+        JTextArea text = new JTextArea();
         try {
             FileReader InputStream = new FileReader(TestUserFile);
             BufferedReader BuffReader = new BufferedReader(InputStream);
 
-            System.out.println("---------------------------------------");
-            System.out.println("\tMajor: " + BuffReader.readLine());
+            Major = BuffReader.readLine();
             String buffer = BuffReader.readLine();
             String[] split;
             while (buffer != null) {
                 split = buffer.split("\\+");
-                System.out.println("\t" + split[0] + "-" + split[1] + ": " + split[2] + " [" + split[3] + " Credit Hours]");
+                text.append(split[0] + "-" + split[1] + ": " + split[2] + " [" + split[3] + " Credit Hours]\n");
                 buffer = BuffReader.readLine();
             }
-            System.out.println("---------------------------------------");
             BuffReader.close();
         }
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
+        return text;
     }
 
-    /**
-     * prints progress from progress file in user profile.
-     */
-    public static void ShowProgress() {
+    private static void getUserName() {
+        File user = new File(System.getProperty("user.dir") + "/user_profile/user");
+        try {
+            FileReader InputStream = new FileReader(user);
+            BufferedReader BuffReader = new BufferedReader(InputStream);
+            FirstName = BuffReader.readLine();
+            LastName = BuffReader.readLine();
+            BuffReader.close();
+        } catch (FileNotFoundException FNF) {
+        } catch (IOException IOE) {
+        }
+    }
+
+    public static JTextArea getProgress() {
         File TestUserFile = new File(progressPath);
+        JTextArea text = new JTextArea();
         try {
             FileReader InputStream = new FileReader(TestUserFile);
             BufferedReader BuffReader = new BufferedReader(InputStream);
             int total = 0;
             int finished = 0;
 
-            System.out.println("---------------------------------------");
-            System.out.println("Progress Report\n");
             String buffer = BuffReader.readLine();
-            if(!buffer.matches("=")) System.out.println("Finished Classes:");
+            if(!buffer.matches("=")) text.append("Finished Classes:\n");
             String[] split;
             while (!buffer.matches("=")) {
                 split = buffer.split("\\+");
-                System.out.println("\t" + split[0] + "-" + split[1] + ": " + split[2]);
+                text.append(split[0] + "-" + split[1] + ": " + split[2]+"\n");
                 total += Integer.parseInt(split[3]);
                 finished += Integer.parseInt(split[3]);
                 buffer = BuffReader.readLine();
             }
             buffer = BuffReader.readLine();
-            if(buffer != null)System.out.println("Unfinished Classes:");
+            if(buffer != null)text.append("Unfinished Classes:\n");
             while (buffer != null) {
                 split = buffer.split("\\+");
-                System.out.println("\t" + split[0] + "-" + split[1] + ": " + split[2]);
+                text.append(split[0] + "-" + split[1] + ": " + split[2]+"\n");
                 total += Integer.parseInt(split[3]);
                 buffer = BuffReader.readLine();
             }
-            System.out.println("\n\t" +finished+ "/" +total+ " Hours Completed");
+            text.append(finished+ "/" +total+ " Hours Completed");
 
-            System.out.println("---------------------------------------");
             BuffReader.close();
         }
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
+        return text;
     }
 
-    /**
-     * Uses the updateUser class to change major.
-     * @param first first name to keep name when changing major
-     * @param last last name to keep name when changing major
-     * */
-    public static void ChangeMajor(String first, String last) {
-        new CreateUser().populateFromConsole(first+"\n"+last);
-    }
+    //public static void ChangeMajor(){
+     //   new CreateUser().populateFromConsole(FirstName+"\n"+LastName);
+    //}
 
     public static boolean updateProgress(String className) {
         String[] name = className.split(" ");

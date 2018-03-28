@@ -76,12 +76,12 @@ public class StartMenu extends JPanel implements ActionListener{
             }
         }
 
-        JLabel welcome = new JLabel("Welcome to StartMenu!");
+        JLabel welcome = new JLabel("Welcome to Gradebook");
         welcome.setFont(new Font("name",1,20));
         panels[1][0].add(welcome);
 
         JLabel instruct = new JLabel("Choose an Option:");
-        welcome.setFont(new Font("details",0,14));
+        instruct.setFont(new Font("details",0,14));
         panels[1][0].add(instruct);
 
         if(UserExists) {
@@ -114,10 +114,9 @@ public class StartMenu extends JPanel implements ActionListener{
             Gradebook.changeToUserProfile();
         }
         else if(ae.getSource() == createBtn) {
-            CreateUser createUser = new CreateUser();
             UserExists = true;
             UserDir.mkdir();
-            createUser.createNewUser();
+            Gradebook.changeToCreateUser();
         }
         else if(ae.getSource() == resetBtn) {
             deleteDir(UserDir);

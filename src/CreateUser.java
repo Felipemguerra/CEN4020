@@ -1,3 +1,6 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Scanner;
 
@@ -6,18 +9,21 @@ import java.util.Scanner;
 /**
  * Used to update the files in the user profile.
  * */
-public class CreateUser {
+public class CreateUser extends JPanel implements ActionListener{
 
-    /**
-     * Called from starting gradebook console to create a new user
-     * or test user.
-     * mode 0: Real User
-     * mode 1: Test Use
-     * */
-    public void createNewUser() {
-        populateFromConsole(null);
-        //possible implementation of from file for user
+    public CreateUser() {
+
     }
+
+    public void actionPerformed(ActionEvent ae) { }
+
+    //need to split up populatefromconsole into two separate methods
+    //one gets user and major info from panel
+    //then goes to class submission panel which takes class info
+    //and asks for next class or submission
+    //store user and majer info into file, pass file to second method
+    //and save class submissions, then send that file to populatefromfile
+    //need to alter get functions to display errors on submission attempt
 
     /**
      * Takes in user information from console, copies it to
@@ -72,7 +78,6 @@ public class CreateUser {
      * @param   input    input file
      * */
     private boolean populateFromFile(File input) {
-        //ile input = new File(filename);
         try {
             BufferedReader BuffReader = new BufferedReader(new FileReader(input));
 

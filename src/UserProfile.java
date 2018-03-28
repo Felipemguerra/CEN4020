@@ -26,8 +26,6 @@ public class UserProfile extends JPanel implements ActionListener{
     private static String LastName;
 
     private static JButton majorBtn;
-    private static JButton progressBtn;
-    private static JButton changeBtn;
     private static JButton semestersBtn;
     private static JButton backBtn;
 
@@ -45,14 +43,8 @@ public class UserProfile extends JPanel implements ActionListener{
 
     private void assignButtons() {
         majorBtn = new JButton();
-        majorBtn.setText("View Your Major");
+        majorBtn.setText("Go To Major");
         majorBtn.addActionListener(this);
-        progressBtn = new JButton();
-        progressBtn.setText("View Your Progress");
-        progressBtn.addActionListener(this);
-        changeBtn = new JButton();
-        changeBtn.setText("Change Your Major");
-        changeBtn.addActionListener(this);
         semestersBtn = new JButton();
         semestersBtn.setText("Go To Semesters");
         semestersBtn.addActionListener(this);
@@ -75,26 +67,22 @@ public class UserProfile extends JPanel implements ActionListener{
 
         JLabel welcome = new JLabel("Hello "+FirstName+" "+LastName);
         welcome.setFont(new Font("name",1,20));
-        panels[2][0].add(welcome);
+        panels[1][0].add(welcome);
 
         JLabel instruct = new JLabel("Choose an Option:");
-        welcome.setFont(new Font("details",0,14));
-        panels[2][0].add(instruct);
+        instruct.setFont(new Font("details",0,14));
+        panels[1][0].add(instruct);
 
         JLabel gpa = new JLabel("GPA: " + getGrade(new File(Semesters.semestersPath)));
-        welcome.setFont(new Font("gpa",1,20));
-        panels[3][0].add(gpa);
+        gpa.setFont(new Font("gpa",1,20));
+        panels[2][0].add(gpa);
 
         majorBtn.setEnabled(true);
-        progressBtn.setEnabled(true);
-        changeBtn.setEnabled(true);
         semestersBtn.setEnabled(true);
         backBtn.setEnabled(true);
-        panels[0][1].add(majorBtn);
-        panels[1][1].add(progressBtn);
-        panels[2][1].add(changeBtn);
-        panels[3][1].add(semestersBtn);
-        panels[4][1].add(backBtn);
+        panels[1][1].add(majorBtn);
+        panels[2][1].add(semestersBtn);
+        panels[3][1].add(backBtn);
 
         repaint();
         validate();
@@ -102,13 +90,7 @@ public class UserProfile extends JPanel implements ActionListener{
 
     public void actionPerformed(ActionEvent ae) {
         if(ae.getSource() == majorBtn) {
-            Major.ShowMajor();
-        }
-        else if(ae.getSource() == progressBtn) {
-            Major.ShowProgress();
-        }
-        else if(ae.getSource() == changeBtn) {
-            Major.ChangeMajor(FirstName,LastName);
+            Gradebook.changeToMajor();
         }
         else if(ae.getSource() == semestersBtn) {
             new Semesters();
