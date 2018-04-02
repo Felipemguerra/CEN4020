@@ -11,11 +11,13 @@ import java.util.Scanner;
  * */
 public class CreateUser extends JPanel implements ActionListener{
 
-    public CreateUser() {
+    private boolean isMajorChange;
 
+    public CreateUser(boolean b) {
+        isMajorChange = b;
     }
 
-    public void actionPerformed(ActionEvent ae) { }
+    public void actionPerformed(ActionEvent ae) {}
 
     //need to split up populatefromconsole into two separate methods
     //one gets user and major info from panel

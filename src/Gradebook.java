@@ -9,11 +9,10 @@ public class Gradebook{
     public static void main(String[] args) {
         frame =  new JFrame();
         container = frame.getContentPane();
-        frame.setName("Gradebook");
+        frame.setTitle("Gradebook");
         frame.setSize(500,400);
         frame.setResizable(false);
-        MenuBar m = new MenuBar();
-        frame.setMenuBar(m);
+        //add a menu?
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         changeToStartMenu();
@@ -40,9 +39,9 @@ public class Gradebook{
         frame.validate();
     }
 
-    public static void changeToCreateUser() {
+    public static void changeToCreateUser(boolean isMajorChange) {
         container.removeAll();
-        container.add(new CreateUser());
+        container.add(new CreateUser(isMajorChange));
         frame.repaint();
         frame.validate();
     }
@@ -50,6 +49,5 @@ public class Gradebook{
     public static void changeToSemester() {}
     public static void changeToClass() {}
     public static void changeToSection() {}
-
-    public void changeToAssignment() {}
+    public static void changeToAssignment() {}
 }

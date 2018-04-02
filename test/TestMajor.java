@@ -3,7 +3,7 @@ import org.junit.Test;
 
 public class TestMajor {
 
-    public CreateUser user = new CreateUser();
+    public CreateUser user = new CreateUser(false);
 
     @Test
     public void testDigit() {

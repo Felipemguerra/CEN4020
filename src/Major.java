@@ -14,9 +14,6 @@ public class Major extends JPanel implements ActionListener {
     public static String majorPath = StartMenu.userPath+"major";
     public static String progressPath = StartMenu.userPath+"progress";
 
-    private static String FirstName;
-    private static String LastName;
-
     private static String Major;
 
     private static JButton majorBtn;
@@ -29,7 +26,6 @@ public class Major extends JPanel implements ActionListener {
     private static JScrollPane scrollPane;
 
     public Major() {
-        getUserName();
         assignComponents();
         setComponents();
         setVisible(true);
@@ -108,7 +104,7 @@ public class Major extends JPanel implements ActionListener {
             showMajor = false;
         }
         else if(ae.getSource() == changeBtn) {
-            Gradebook.changeToCreateUser();
+            Gradebook.changeToCreateUser(true);
         }
         else if(ae.getSource() == backBtn) {
             Gradebook.changeToUserProfile();
@@ -139,19 +135,6 @@ public class Major extends JPanel implements ActionListener {
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
         return text;
-    }
-
-    private static void getUserName() {
-        File user = new File(System.getProperty("user.dir") + "/user_profile/user");
-        try {
-            FileReader InputStream = new FileReader(user);
-            BufferedReader BuffReader = new BufferedReader(InputStream);
-            FirstName = BuffReader.readLine();
-            LastName = BuffReader.readLine();
-            BuffReader.close();
-        } catch (FileNotFoundException FNF) {
-        } catch (IOException IOE) {
-        }
     }
 
     public static JTextArea getProgress() {

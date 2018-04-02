@@ -116,14 +116,14 @@ public class StartMenu extends JPanel implements ActionListener{
         else if(ae.getSource() == createBtn) {
             UserExists = true;
             UserDir.mkdir();
-            Gradebook.changeToCreateUser();
+            Gradebook.changeToCreateUser(false);
         }
         else if(ae.getSource() == resetBtn) {
             deleteDir(UserDir);
             UserExists = false;
         }
         else if(ae.getSource() == testBtn) {
-            if(!makeTestUser()) System.out.println("Missing Test Profile");
+            if(!makeTestUser()) System.err.println("Missing Test Profile");
             else {
                 if(!UserExists) UserExists = true;
             }
