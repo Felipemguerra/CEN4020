@@ -1,114 +1,154 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Scanner;
 
-public class Semesters {
+public class Semesters extends JPanel implements ActionListener{
 
     public static String semestersPath = StartMenu.userPath+"semesters/";
 
-    private int semesterCount = 0;
-
     private File[] semesters = {};
 
-    private String C_DASH = "0";
-    private String C_QUIT = "q";
-    private String C_ADD = "\\+";
+    private boolean addingSemester = false;
+
+    private JButton addBtn;
+    private JButton selectBtn;
+    private JButton backBtn;
+    private JButton submitBtn;
+
+    private JTextField semName;
+    private JTextField semYear;
+
+    private JList<String> semestersList;
 
     public Semesters() {
+        assignComponents();
+        setComponents();
+    }
+
+    private void assignComponents() {
+        addBtn = new JButton("Add Semester");
+        addBtn.addActionListener(this);
+        selectBtn = new JButton("Select Semester");
+        selectBtn.addActionListener(this);
+        backBtn = new JButton("Go Back");
+        backBtn.addActionListener(this);
+        submitBtn = new JButton("Submit");
+        submitBtn.addActionListener(this);
+
+        semName = new JTextField();
+        semYear = new JTextField();
+        fillSemesters();
+    }
+
+    private void fillSemesters() {
         getSemesters();
-        printSemestersDashboard();
-        String input;
-        while(!(input = getInput()).matches(C_QUIT)) {
-            if(input.matches(C_ADD)) addSemester();
-            else if(input.matches(C_DASH)) printSemestersDashboard();
-            else if(input.matches("[1-9]+")) {
-                int sem = Integer.parseInt(input);
-                if(sem > 0 && sem <= semesterCount) {
-                    new Semester().startup(semesters[sem-1]);
-                    printSemestersDashboard();
+        DefaultListModel<String> list = new DefaultListModel<>();
+        for(File i: semesters) list.addElement(i.getName());
+        semestersList = new JList<>(list);
+    }
+
+    private void setComponents() {
+        removeAll();
+        if(addingSemester) {
+            setLayout(new GridLayout(4, 2, 0, 0));
+
+            JPanel[][] panels = new JPanel[4][2];
+            for (int i = 0; i < 4; ++i) {
+                for(int e =0; e < 2; ++e) {
+                    panels[i][e] = new JPanel();
+                    add(panels[i][e]);
                 }
-                else System.out.println("Sorry, Try Again.");
             }
-            else System.out.println("Sorry, Try Again.");
-            System.out.println("Press 0 For Menu");
+
+            panels[0][0].add(new JLabel("Semester Name:"));
+            panels[1][0].add(new JLabel("Semester Year:"));
+            panels[3][1].add(submitBtn);
+            panels[3][0].add(backBtn);
+            panels[0][1].setLayout(new BorderLayout());
+            panels[0][1].add(semName);
+            panels[1][1].setLayout(new BorderLayout());
+            panels[1][1].add(semYear);
         }
-    }
+        else {
+            setLayout(new GridLayout(1, 2, 0, 0));
 
-    private String getInput() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
-    }
+            JPanel Btns = new JPanel();
+            Btns.setLayout(new GridLayout(3, 1, 0, 0));
+            JPanel[][] panels = new JPanel[3][1];
+            for (int i = 0; i < 3; ++i) {
+                panels[i][0] = new JPanel();
+                Btns.add(panels[i][0]);
+            }
 
-    private void printSemestersDashboard() {
-        System.out.println("---------------------------------------");
-        System.out.println("\t"+C_QUIT+": Go Back");
-        System.out.println("\t+: Add Semester");
-        System.out.println("\t0: Show Menu");
-        printSemesters();
-        System.out.println("---------------------------------------");
-    }
+            panels[0][0].add(selectBtn);
+            panels[1][0].add(addBtn);
+            panels[2][0].add(backBtn);
 
-    private void printSemesters() {
-        for(int i = 0; i < semesterCount; ++i) {
-            System.out.println("\t" + (i+1) + ": " + semesters[i].getName());
+            add(Btns);
+            add(semestersList);
         }
+        repaint();
+        validate();
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        resetComponents();
+        if(ae.getSource() == backBtn) {
+            if(addingSemester) addingSemester = false;
+            else Gradebook.changeToUserProfile();
+        }
+        else if(ae.getSource() == addBtn) {
+            addingSemester = true;
+        }
+        else if(ae.getSource() == selectBtn) {
+            if(semestersList.isSelectionEmpty()) selectBtn.setBackground(new Color(255,204,204));
+            else Gradebook.changeToSemester(new File(semestersPath+semestersList.getSelectedValue()));
+        }
+        else if(ae.getSource() == submitBtn) {
+            if(addSemester()) addingSemester = false;
+            else submitBtn.setBackground(new Color(255,204,204));
+        }
+        setComponents();
+    }
+
+    private void resetComponents() {
+        selectBtn.setBackground(null);
+        submitBtn.setBackground(null);
     }
 
     private void getSemesters() {
         File sems = new File(System.getProperty("user.dir")+"/user_profile/semesters");
         if(!sems.exists()){ sems.mkdir(); }
         semesters = sems.listFiles();
-        semesterCount = semesters.length;
     }
 
-    private void addSemester() {
-        File dir = new File(System.getProperty("user.dir") + "/user_profile/semesters");
-        boolean get = true;
-        String input = "";
-        while(get) {
-            get = false;
-            input = getSemesterFromConsole();
-            for(File i : semesters) {
-                if(i.getName().matches(input)) {
-                    get = true;
-                    System.out.println("Semester Already Exists, Try Again");
-                    break;
-                }}
+    private boolean addSemester() {
+        String name = semName.getText();
+        String year = semYear.getText();
+
+        if(!name.matches("(?i)Fall") && !name.matches("(?i)Spring") && !name.matches("(?i)Summer")) return false;
+        semName.setText(name.substring(0,1).toUpperCase() + name.substring(1));
+
+        if(!year.matches("[0-9][0-9][0-9][0-9]")) return false;
+
+        for(File i : semesters) {
+            if(i.getName().matches(semName.getText()+" "+semYear.getText())) {
+                return false;
+            }
         }
-        addNewSemester(input);
-        getSemesters();
+
+        addNewSemester(semName.getText()+" "+semYear.getText());
+        semName.setText("");
+        semYear.setText("");
+        fillSemesters();
+        return true;
     }
 
     private void addNewSemester(String name) {
         File newSemester = new File(semestersPath + name);
         newSemester.mkdir();
-    }
-
-    private String getSemesterFromConsole() {
-        Scanner scanner = new Scanner(System.in);
-        String semester = "", buffer = "";
-        boolean get = true;
-        while(get) {
-            get = false;
-            System.out.println("Enter Semester Name: ");
-            buffer = scanner.nextLine();
-            if(!buffer.matches("(?i)Fall") && !buffer.matches("(?i)Spring") && !buffer.matches("(?i)Summer")) {
-                get = true;
-                System.out.println("Bad Name, Try Again");
-            }
-        }
-        buffer = buffer.substring(0, 1).toUpperCase() + buffer.substring(1);
-        semester += buffer + " ";
-        get = true;
-        while(get) {
-            get = false;
-            System.out.println("Enter Semester Year: ");
-            buffer = scanner.nextLine();
-            if(!buffer.matches("[0-9][0-9][0-9][0-9]")) {
-                get = true;
-                System.out.println("Bad Year, Try Again");
-            }
-        }
-        semester += buffer;
-        return semester;
     }
 }

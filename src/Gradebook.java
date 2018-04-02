@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class Gradebook{
 
@@ -46,7 +47,19 @@ public class Gradebook{
         frame.validate();
     }
 
-    public static void changeToSemester() {}
+    public static void changeToSemesters() {
+        container.removeAll();
+        container.add(new Semesters());
+        frame.repaint();
+        frame.validate();
+    }
+
+    public static void changeToSemester(File semester) {
+        container.removeAll();
+        container.add(new Semester(semester)); //add file parameter to determine which semester
+        frame.repaint();
+        frame.validate();
+    }
     public static void changeToClass() {}
     public static void changeToSection() {}
     public static void changeToAssignment() {}

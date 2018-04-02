@@ -76,23 +76,26 @@ public class StartMenu extends JPanel implements ActionListener{
             }
         }
 
+        panels[1][0].setLayout(new GridLayout(2,1,0,0));
+
         JLabel welcome = new JLabel("Welcome to Gradebook");
         welcome.setFont(new Font("name",1,20));
+        welcome.setHorizontalAlignment(JLabel.CENTER);
         panels[1][0].add(welcome);
 
         JLabel instruct = new JLabel("Choose an Option:");
         instruct.setFont(new Font("details",0,14));
+        instruct.setHorizontalAlignment(JLabel.CENTER);
         panels[1][0].add(instruct);
 
         if(UserExists) {
             accessBtn.setEnabled(true);
             resetBtn.setEnabled(true);
-            testBtn.setEnabled(true);
+            testBtn.setEnabled(false);
             exitBtn.setEnabled(true);
             createBtn.setEnabled(false);
-            panels[0][1].add(accessBtn);
-            panels[1][1].add(resetBtn);
-            panels[2][1].add(testBtn);
+            panels[1][1].add(accessBtn);
+            panels[2][1].add(resetBtn);
             panels[3][1].add(exitBtn);
         }
         else {

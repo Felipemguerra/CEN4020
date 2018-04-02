@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.Scanner;
 
@@ -6,7 +7,7 @@ import java.util.Scanner;
  * implemented by Felipe and Daniel
  * */
 
-public class Semester {
+public class Semester extends JPanel{
 
     private File Semester;
 
@@ -18,6 +19,11 @@ public class Semester {
     private String C_QUIT = "q";
     private String C_ADD = "\\+";
     private String C_DASH = "0";
+
+    public Semester(File semester) {
+        System.out.print(semester.getName());
+        startup(semester);
+    }
 
     public void startup(File semester) {
         Semester = semester;
@@ -41,6 +47,7 @@ public class Semester {
             else System.out.println("Sorry, Try Again.");
             System.out.println("Press 0 For Menu");
         }
+        Gradebook.changeToSemesters();
     }
 
     private String getInput() {

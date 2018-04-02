@@ -65,12 +65,16 @@ public class UserProfile extends JPanel implements ActionListener{
             }
         }
 
+        panels[1][0].setLayout(new GridLayout(2,1,0,0));
+
         JLabel welcome = new JLabel("Hello "+FirstName+" "+LastName);
         welcome.setFont(new Font("name",1,20));
+        welcome.setHorizontalAlignment(JLabel.CENTER);
         panels[1][0].add(welcome);
 
         JLabel instruct = new JLabel("Choose an Option:");
         instruct.setFont(new Font("details",0,14));
+        instruct.setHorizontalAlignment(JLabel.CENTER);
         panels[1][0].add(instruct);
 
         JLabel gpa = new JLabel("GPA: " + getGrade(new File(Semesters.semestersPath)));
@@ -93,7 +97,7 @@ public class UserProfile extends JPanel implements ActionListener{
             Gradebook.changeToMajor();
         }
         else if(ae.getSource() == semestersBtn) {
-            new Semesters();
+            Gradebook.changeToSemesters();
         }
         else if(ae.getSource() == backBtn) {
             Gradebook.changeToStartMenu();

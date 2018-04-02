@@ -169,7 +169,10 @@ public class CreateUser extends JPanel implements ActionListener{
                 addingClass = false;
                 majorList = "";
             }
-            else Gradebook.changeToStartMenu();
+            else {
+                if(isMajorChange) Gradebook.changeToMajor();
+                else Gradebook.changeToStartMenu();
+            }
         }
         setComponents();
     }

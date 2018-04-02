@@ -25,9 +25,6 @@ public class Major extends JPanel implements ActionListener {
 
     private static JScrollPane scrollPane;
 
-    private String fname;
-    private String lname;
-
     public Major() {
         assignComponents();
         setComponents();
@@ -66,12 +63,15 @@ public class Major extends JPanel implements ActionListener {
         add(buttons);
 
         getMajor();
+        panels[0][0].setLayout(new GridLayout(2,1,0,0));
         JLabel major = new JLabel(Major);
         major.setFont(new Font("majorLabel", 0, 18));
+        major.setHorizontalAlignment(JLabel.CENTER);
         panels[0][0].add(major);
 
         JLabel instruct = new JLabel("Choose an Option:");
         instruct.setFont(new Font("details", 0, 14));
+        instruct.setHorizontalAlignment(JLabel.CENTER);
         panels[0][0].add(instruct);
 
         if (showMajor) {
@@ -137,6 +137,7 @@ public class Major extends JPanel implements ActionListener {
         }
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
+        text.setEditable(false);
         return text;
     }
 
@@ -173,6 +174,7 @@ public class Major extends JPanel implements ActionListener {
         }
         catch (FileNotFoundException FNF) {}
         catch (IOException IOE) {}
+        text.setEditable(false);
         return text;
     }
 

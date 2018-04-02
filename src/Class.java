@@ -205,7 +205,7 @@ public class Class {
 
             total = 0;
             BuffReader = new BufferedReader(new FileReader(classfile.getAbsolutePath()+"/class"));
-            buffer = BuffReader.readLine();
+            buffer = BuffReader.readLine();//credit hours
             buffer = BuffReader.readLine();
             while(!buffer.matches("0") && !buffer.matches("1")) {
                 sectionInfo[total] = buffer;
