@@ -10,7 +10,7 @@ public class Gradebook{
         frame =  new JFrame();
         container = frame.getContentPane();
         frame.setTitle("Gradebook");
-        frame.setSize(500,400);
+        frame.setSize(600,400);
         frame.setResizable(false);
         //add a menu?
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

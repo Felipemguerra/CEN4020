@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -12,59 +13,236 @@ import java.util.Scanner;
 public class CreateUser extends JPanel implements ActionListener{
 
     private boolean isMajorChange;
+    private boolean addingClass = false;
+
+    private JButton submitBtn;
+    private JButton addBtn;
+    private JButton backBtn;
+
+    private JTextField firstNameInput;
+    private JTextField lastNameInput;
+    private JTextField majorInput;
+
+    private JTextField sCodeInput;
+    private JTextField cCodeInput;
+    private JTextField nameInput;
+    private JTextField hoursInput;
+
+    private String majorList = "";
 
     public CreateUser(boolean b) {
         isMajorChange = b;
+        assignComponents();
+        setComponents();
     }
 
-    public void actionPerformed(ActionEvent ae) {}
+    private void assignComponents() {
+        submitBtn = new JButton();
+        submitBtn.setText("Submit");
+        submitBtn.addActionListener(this);
+        addBtn = new JButton();
+        addBtn.setText("Add Class");
+        addBtn.addActionListener(this);
+        backBtn = new JButton();
+        backBtn.setText("Go Back");
+        backBtn.addActionListener(this);
+        //if major change, set these fields with defaults
+        firstNameInput = new JTextField();
+        lastNameInput = new JTextField();
+        if (isMajorChange) {
+            File user = new File(System.getProperty("user.dir")+"/user_profile/user");
+            String FirstName = "";
+            String LastName = "";
+            try {
+                FileReader InputStream = new FileReader(user);
+                BufferedReader BuffReader = new BufferedReader(InputStream);
+                FirstName = BuffReader.readLine();
+                LastName = BuffReader.readLine();
+                BuffReader.close();
+            }
+            catch (FileNotFoundException FNF) {}
+            catch (IOException IOE) {}
+            firstNameInput.setText(FirstName);
+            lastNameInput.setText(LastName);
+        }
+        majorInput = new JTextField();
+        sCodeInput = new JTextField();
+        cCodeInput = new JTextField();
+        nameInput = new JTextField();
+        hoursInput = new JTextField();
+    }
 
-    //need to split up populatefromconsole into two separate methods
-    //one gets user and major info from panel
-    //then goes to class submission panel which takes class info
-    //and asks for next class or submission
-    //store user and majer info into file, pass file to second method
-    //and save class submissions, then send that file to populatefromfile
-    //need to alter get functions to display errors on submission attempt
+    private void setComponents() {
+        removeAll();
+        setLayout(new GridLayout(5,2,0,0));
 
-    /**
-     * Takes in user information from console, copies it to
-     * a file and calls populateFromFile.  Takes in string if
-     * just changing major.
-     * @param name  if changing major("firs\nlast"), otherwise null
-     * */
-    public void populateFromConsole(String name) {
-        String buffer;
+        JPanel[][] panels = new JPanel[5][2];
+        for(int i = 0; i < 5; ++i) {
+            for(int e = 0; e < 2; ++e) {
+                panels[i][e] = new JPanel();
+                add(panels[i][e]);
+            }
+        }
+
+        if(addingClass) {
+            JLabel sCode = new JLabel("Enter Subject Code:");
+            sCode.setFont(new Font("scode",0,14));
+            panels[0][0].add(sCode);
+
+            JLabel cCode = new JLabel("Enter Class Code:");
+            cCode.setFont(new Font("ccode",0,14));
+            panels[1][0].add(cCode);
+
+            JLabel name = new JLabel("Enter Class Name:");
+            name.setFont(new Font("name",0,14));
+            panels[2][0].add(name);
+
+            JLabel hours = new JLabel("Enter Credit Hours:");
+            hours.setFont(new Font("hours",0,14));
+            panels[3][0].add(hours);
+
+            panels[0][1].setLayout(new BorderLayout());
+            panels[0][1].add(sCodeInput);
+            panels[1][1].setLayout(new BorderLayout());
+            panels[1][1].add(cCodeInput);
+            panels[2][1].setLayout(new BorderLayout());
+            panels[2][1].add(nameInput);
+            panels[3][1].setLayout(new BorderLayout());
+            panels[3][1].add(hoursInput);
+
+            panels[4][1].add(addBtn);
+            panels[4][1].add(submitBtn);
+            panels[4][0].add(backBtn);
+        }
+        else {
+            JLabel fName = new JLabel("Enter Your First Name:");
+            fName.setFont(new Font("fname",0,14));
+            panels[0][0].add(fName);
+
+            JLabel lName = new JLabel("Enter Your Last Name:");
+            lName.setFont(new Font("lname",0,14));
+            panels[1][0].add(lName);
+
+            JLabel major = new JLabel("Enter Your Major:");
+            major.setFont(new Font("major",0,14));
+            panels[2][0].add(major);
+
+            panels[0][1].setLayout(new BorderLayout());
+            panels[0][1].add(firstNameInput);
+            panels[1][1].setLayout(new BorderLayout());
+            panels[1][1].add(lastNameInput);
+            panels[2][1].setLayout(new BorderLayout());
+            panels[2][1].add(majorInput);
+
+            panels[4][1].add(submitBtn);
+            panels[4][0].add(backBtn);
+        }
+
+        repaint();
+        validate();
+    }
+    public void actionPerformed(ActionEvent ae) {
+        resetInputFields();
+        if(ae.getSource() == submitBtn && !addingClass) {
+            if(!errorInInfo()) { addingClass = true;}
+        }
+        else if(ae.getSource() == submitBtn && addingClass){
+            if(!errorInClass()) {
+                majorList += getAClass();
+                populate();
+                if(isMajorChange) {
+                    //update progress
+                    Gradebook.changeToMajor();
+                }
+                else Gradebook.changeToStartMenu();
+
+            }
+        }
+        else if(ae.getSource() == addBtn){
+            if(!errorInClass()) {
+                majorList += getAClass() + "\n";
+                clearInputFields();
+            }
+        }
+        else if(ae.getSource() == backBtn) {
+            if(addingClass) {
+                addingClass = false;
+                majorList = "";
+            }
+            else Gradebook.changeToStartMenu();
+        }
+        setComponents();
+    }
+
+    private boolean errorInInfo() {
+        if(!checkUserName(firstNameInput.getText())) {
+            firstNameInput.setBackground(new Color(255,204,204));
+            return true;
+        }
+        else if(!checkUserName(lastNameInput.getText())) {
+            lastNameInput.setBackground(new Color(255,204,204));
+            return true;
+        }
+        else if(!checkMajor(majorInput.getText())) {
+            majorInput.setBackground(new Color(255,204,204));
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean errorInClass() {
+        if(!checkClassSubject(sCodeInput.getText())){
+            sCodeInput.setBackground(new Color(255,204,204));
+            return true;
+        }
+        else if(!checkClassCode(cCodeInput.getText())) {
+            cCodeInput.setBackground(new Color(255,204,204));
+            return true;
+        }
+        else if(!checkClassName(nameInput.getText())) {
+            nameInput.setBackground(new Color(255,204,204));
+            return true;
+        }
+        else if(!checkCreditHours(hoursInput.getText())) {
+            hoursInput.setBackground(new Color(255,204,204));
+            return true;
+        }
+        else return false;
+    }
+
+    private void resetInputFields(){
+        firstNameInput.setBackground(new Color(255,255,255));
+        lastNameInput.setBackground(new Color(255,255,255));
+        majorInput.setBackground(new Color(255,255,255));
+        sCodeInput.setBackground(new Color(255,255,255));
+        cCodeInput.setBackground(new Color(255,255,255));
+        nameInput.setBackground(new Color(255,255,255));
+        hoursInput.setBackground(new Color(255,255,255));
+    }
+
+    private void clearInputFields() {
+        sCodeInput.setText("");
+        cCodeInput.setText("");
+        nameInput.setText("");
+        hoursInput.setText("");
+    }
+
+    private String getAClass() {
+        return sCodeInput.getText()+"+"+cCodeInput.getText()+"+"+nameInput.getText()+"+"+hoursInput.getText();
+    }
+
+    public void populate() {
         File temp = new File(System.getProperty("user.dir")+"/console_temp");
-        Scanner scanner = new Scanner(System.in);
         try {
             BufferedWriter BuffWriter = new BufferedWriter(new FileWriter(temp));
-            if (name != null) {
-                BuffWriter.write(name);
-                BuffWriter.newLine();
-            }
-            else{
-                buffer = getFirstName();
-                BuffWriter.write(buffer);
-                BuffWriter.newLine();
-                buffer = getLastName();
-                BuffWriter.write(buffer);
-                BuffWriter.newLine();
-            }
-
-            buffer = getMajor();
-            BuffWriter.write(buffer);
+            BuffWriter.write(firstNameInput.getText());
             BuffWriter.newLine();
-            do {
-                buffer = getAClass();
-                BuffWriter.write(buffer);
-                System.out.println("---------------------------------------");
-                System.out.println("0:Add Another Class");
-                System.out.println("1:Submit");
-                System.out.println("---------------------------------------");
-                buffer = scanner.nextLine();
-                if(buffer.matches("0")) BuffWriter.newLine();
-            } while(buffer.matches("0"));
+            BuffWriter.write(lastNameInput.getText());
+            BuffWriter.newLine();
+
+            BuffWriter.write(majorInput.getText());
+            BuffWriter.newLine();
+            BuffWriter.write(majorList);
             BuffWriter.close();
         }
         catch (FileNotFoundException FNF) {}
@@ -73,42 +251,8 @@ public class CreateUser extends JPanel implements ActionListener{
         temp.delete();
     }
 
-    /**
-     * Reads a provided file and creates a new user profile based
-     * on it.  Assumes a valid input file.  Future error checking and
-     * boolean return possible.
-     * @param   input    input file
-     * */
     private boolean populateFromFile(File input) {
-        try {
-            BufferedReader BuffReader = new BufferedReader(new FileReader(input));
-
-            String buffer;
-            String[] s;
-
-            buffer = BuffReader.readLine();
-            if(!checkUserName(buffer)) {BuffReader.close();System.out.println("Bad First Name in Input File");return false;}
-
-            buffer = BuffReader.readLine();
-            if(!checkUserName(buffer)) {BuffReader.close();System.out.println("Bad Last Name in Input File");return false;}
-
-            buffer = BuffReader.readLine();
-            if(!checkMajor(buffer)) {BuffReader.close();System.out.println("Bad Major in Input File");return false;}
-
-            if((buffer = BuffReader.readLine()) == null) {BuffReader.close();System.out.println("No Classes in Input File");return false;}
-
-            while(buffer != null){
-                s = buffer.split("\\+");
-                if(!checkClassSubject(s[0])) {BuffReader.close();System.out.println("Bad Subject Code in Input File");return false;}
-                if(!checkClassCode(s[1])) {BuffReader.close();System.out.println("Bad Class Code in Input File");return false;}
-                if(!checkClassName(s[2])) {BuffReader.close();System.out.println("Bad Class Name in Input File");return false;}
-                if(!checkCreditHours(s[3])) {BuffReader.close();System.out.println("Bad Credit Hours in Input File");return false;}
-                buffer = BuffReader.readLine();
-            }
-            BuffReader.close();
-        }
-        catch (FileNotFoundException FNF) {System.err.println("Missing input File");return false;}
-        catch (IOException IOE) {System.err.println("Error Reading From File");return false;}
+        new File(StartMenu.userPath).mkdir();
 
         File user = new File(UserProfile.userPath);
         File major = new File(Major.majorPath);
@@ -145,96 +289,6 @@ public class CreateUser extends JPanel implements ActionListener{
         catch (FileNotFoundException FNF) {System.err.println("Missing input File"); return false;}
         catch (IOException IOE) {System.err.println("Error Reading From File"); return false;}
         return true;
-    }
-
-    /**
-     * Console input of first name.  Only returns name
-     * if it is valid.
-     * @return  a string containing the first name
-     * */
-    private String getFirstName() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\tEnter Your First Name");
-        String input = scanner.nextLine();
-        while(!checkUserName(input)){
-            System.out.println("Bad First Name, Try Again");
-            input = scanner.nextLine();
-        }
-        return input;
-    }
-
-    /**
-     * Console input of last name.  Only returns name
-     * if it is valid.
-     * @return  a string containing the last name
-     * */
-    private String getLastName() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\tEnter Your Last Name");
-        String input = scanner.nextLine();
-        while(!checkUserName(input)){
-            System.out.println("Bad Last Name, Try Again");
-            input = scanner.nextLine();
-        }
-        return input;
-    }
-
-    /**
-     * Console input of major.  Only returns major
-     * if it is valid.
-     * @return  a string containing the major
-     * */
-    private String getMajor() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\tEnter Your Major");
-        String input = scanner.nextLine();
-        while(!checkMajor(input)){
-            System.out.println("Bad Major, Try Again");
-            input = scanner.nextLine();
-        }
-        return input;
-    }
-
-    /**
-     * Console input of a class.  Only returns class
-     * if it is valid.
-     * @return  a string containing a class
-     * */
-    private String getAClass() {
-        Scanner scanner = new Scanner(System.in);
-        String input = "", buffer;
-        System.out.println("\tEnter Class Subject Code ie. COP");
-        buffer = scanner.nextLine();
-        while (!checkClassSubject(buffer)){
-            System.out.println("Bad Subject, Try Again");
-            buffer = scanner.nextLine();
-        }
-        input += buffer;
-        input += "+";
-        System.out.println("\tEnter Class Code ie. 3330");
-        buffer = scanner.nextLine();
-        while (!checkClassCode(buffer)){
-            System.out.println("Bad Class Code, Try Again");
-            buffer = scanner.nextLine();
-        }
-        input += buffer;
-        input += "+";
-        System.out.println("\tEnter Class Name ie. Intro to Programming");
-        buffer = scanner.nextLine();
-        while (!checkClassName(buffer)){
-            System.out.println("Bad Class Name, Try Again");
-            buffer = scanner.nextLine();
-        }
-        input += buffer;
-        input += "+";
-        System.out.println("\tEnter Class Credit Hours ie. 3");
-        buffer = scanner.nextLine();
-        while (!checkCreditHours(buffer)){
-            System.out.println("Bad Hours, Try Again");
-            buffer = scanner.nextLine();
-        }
-        input += buffer;
-        return input;
     }
 
     /**

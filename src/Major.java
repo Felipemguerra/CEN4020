@@ -25,6 +25,9 @@ public class Major extends JPanel implements ActionListener {
 
     private static JScrollPane scrollPane;
 
+    private String fname;
+    private String lname;
+
     public Major() {
         assignComponents();
         setComponents();
@@ -172,10 +175,6 @@ public class Major extends JPanel implements ActionListener {
         catch (IOException IOE) {}
         return text;
     }
-
-    //public static void ChangeMajor(){
-     //   new CreateUser().populateFromConsole(FirstName+"\n"+LastName);
-    //}
 
     public static boolean updateProgress(String className) {
         String[] name = className.split(" ");

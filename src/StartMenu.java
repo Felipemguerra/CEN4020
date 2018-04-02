@@ -114,9 +114,8 @@ public class StartMenu extends JPanel implements ActionListener{
             Gradebook.changeToUserProfile();
         }
         else if(ae.getSource() == createBtn) {
-            UserExists = true;
-            UserDir.mkdir();
             Gradebook.changeToCreateUser(false);
+            if(UserDir.exists()) UserExists = true;
         }
         else if(ae.getSource() == resetBtn) {
             deleteDir(UserDir);
