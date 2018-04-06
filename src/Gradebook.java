@@ -60,7 +60,12 @@ public class Gradebook{
         frame.repaint();
         frame.validate();
     }
-    public static void changeToClass() {}
+    public static void changeToClass(File c, File s) {
+        container.removeAll();
+        container.add(new Class(c,s)); //add file parameter to determine which semester
+        frame.repaint();
+        frame.validate();
+    }
     public static void changeToSection() {}
     public static void changeToAssignment() {}
 }

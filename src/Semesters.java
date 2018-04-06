@@ -119,6 +119,8 @@ public class Semesters extends JPanel implements ActionListener{
     private void resetComponents() {
         selectBtn.setBackground(null);
         submitBtn.setBackground(null);
+        semName.setText(null);
+        semYear.setText(null);
     }
 
     private void getSemesters() {
@@ -143,8 +145,6 @@ public class Semesters extends JPanel implements ActionListener{
         }
 
         addNewSemester(semName.getText()+" "+semYear.getText());
-        semName.setText("");
-        semYear.setText("");
         fillSemesters();
         return true;
     }

@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Scanner;
@@ -6,15 +7,22 @@ import java.util.Scanner;
 * implemented by Daniel and Redden
 */
 
-public class Class {
+public class Class extends JPanel{
 
     private File Class;
+    private File Semester;
 
     private File classInfo;
 
     private File[] sections;
 
     private int sectionCount = 0;
+
+    public Class(File c, File sem) {
+        Class = c;
+        Semester = sem;
+        startup(c);
+    }
 
     public void startup(File c) {
         Class = c;
@@ -40,6 +48,7 @@ public class Class {
             else System.out.println("Sorry, Try Again.");
             System.out.println("Press 0 For Menu");
         }
+        Gradebook.changeToSemester(Semester);
     }
 
     private void printClassDashboard() {
