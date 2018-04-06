@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Scanner;
 
@@ -7,7 +9,7 @@ import java.util.Scanner;
  * implemented by Felipe and Daniel
  * */
 
-public class Semester extends JPanel{
+public class Semester extends JPanel implements ActionListener{
 
     private File Semester;
 
@@ -15,19 +17,34 @@ public class Semester extends JPanel{
 
     private int classCount = 0;
 
-
     private String C_QUIT = "q";
     private String C_ADD = "\\+";
     private String C_DASH = "0";
 
-    public Semester(File semester) {
-        System.out.print(semester.getName());
-        startup(semester);
-    }
+    private JButton addBtn;
+    private JButton backBtn;
+    private JButton selectBtn;
+    private JButton submitBtn;
 
-    public void startup(File semester) {
+    private JList<String> classList;
+
+    private JTextField subjectCode;
+    private JTextField classCode;
+
+    public Semester(File semester) {
         Semester = semester;
         getClasses();
+        assignComponents();
+        setComponents();
+    }
+
+    private void assignComponents() {}
+
+    private void setComponents() {}
+
+    public void actionPerformed(ActionEvent ae) {}
+
+    public void startup(File semester) {
         printClassesDashboard();
         String input;
         while(!(input = getInput()).matches(C_QUIT)) {

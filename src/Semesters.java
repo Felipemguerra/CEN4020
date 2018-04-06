@@ -88,7 +88,9 @@ public class Semesters extends JPanel implements ActionListener{
             panels[2][0].add(backBtn);
 
             add(Btns);
-            add(semestersList);
+            JScrollPane scroll = new JScrollPane();
+            scroll.setViewportView(semestersList);
+            add(scroll);
         }
         repaint();
         validate();
