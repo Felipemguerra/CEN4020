@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.Scanner;
 
 /**
  * A class that offers functionality to add and view a semester
@@ -115,7 +114,11 @@ public class Semester extends JPanel implements ActionListener{
             else Gradebook.changeToClass(new File(Semester.getAbsolutePath()+"/"+classesList.getSelectedValue()), Semester);
         }
         else if(ae.getSource() == submitBtn) {
-            if(addClass()) addingClass = false;
+            if(addClass()) {
+                addingClass = false;
+                subjectCode.setText(null);
+                classCode.setText(null);
+            }
             else submitBtn.setBackground(new Color(255,204,204));
         }
         setComponents();
@@ -124,8 +127,6 @@ public class Semester extends JPanel implements ActionListener{
     private void resetComponents() {
         selectBtn.setBackground(null);
         submitBtn.setBackground(null);
-        subjectCode.setText(null);
-        classCode.setText(null);
     }
 
     private void getClasses() {
@@ -133,57 +134,25 @@ public class Semester extends JPanel implements ActionListener{
     }
 
     private boolean addClass() {
+        String sCode = subjectCode.getText();
+        String cCode = classCode.getText();
+
+        if(!sCode.matches("[a-zA-Z]+") || sCode.length() != 3) return false;
+        subjectCode.setText(sCode.toUpperCase());
+
+        if(!cCode.matches("[0-9]+") || cCode.length() != 4) return false;
+
+        for(File i : classes)
+            if(i.getName().matches(subjectCode.getText()+" "+classCode.getText())) return false;
+
+        addNewClass(subjectCode.getText()+" "+classCode.getText());
+        fillClasses();
         return true;
-        /*
-        boolean get = true;
-        String input = "";
-        while(get) {
-            get = false;
-            input = getClassFromConsole();
-            for(File i : classes) {
-                if(i.getName().matches(input)) {
-                    get = true;
-                    System.out.println("Class Already Exists, Try Again");
-                    break;
-                }
-            }
-        }
-        addNewClass(input);
-        getClasses();*/
     }
 
     private void addNewClass(String name) {
         File newSemester = new File(Semester.getAbsolutePath() + "/" +name);
         newSemester.mkdir();
-    }
-
-    private String getClassFromConsole() {
-        Scanner scanner = new Scanner(System.in);
-        String className = "", buffer = "";
-        boolean get = true;
-        while(get) {
-            get = false;
-            System.out.println("Enter Subject Code: ");
-            buffer = scanner.nextLine();
-            if(!buffer.matches("[a-zA-Z]+") || buffer.length() != 3) {
-                get = true;
-                System.out.println("Bad Code, Try Again");
-            }
-        }
-        buffer = buffer.toUpperCase();
-        className += buffer + " ";
-        get = true;
-        while(get) {
-            get = false;
-            System.out.println("Enter Class Code: ");
-            buffer = scanner.nextLine();
-            if(!buffer.matches("[0-9]+") || buffer.length() != 4) {
-                get = true;
-                System.out.println("Bad Class Code, Try Again");
-            }
-        }
-        className += buffer;
-        return className;
     }
 
     public static String[] getSemesterGrade(File semester) {

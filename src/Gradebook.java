@@ -56,16 +56,24 @@ public class Gradebook{
 
     public static void changeToSemester(File semester) {
         container.removeAll();
-        container.add(new Semester(semester)); //add file parameter to determine which semester
+        container.add(new Semester(semester));
         frame.repaint();
         frame.validate();
     }
     public static void changeToClass(File c, File s) {
         container.removeAll();
-        container.add(new Class(c,s)); //add file parameter to determine which semester
+        container.add(new Class(c,s));
         frame.repaint();
         frame.validate();
     }
+
+    public static void changeToClassSetup(File c, File s) {
+        container.removeAll();
+        container.add(new ClassSetup(c, s));
+        frame.repaint();
+        frame.validate();
+    }
+
     public static void changeToSection() {}
     public static void changeToAssignment() {}
 }

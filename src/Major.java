@@ -190,7 +190,7 @@ public class Major extends JPanel implements ActionListener {
 
             String buffer = BuffReader.readLine();
             String[] split;
-            while (!buffer.matches("=")) ;
+            while (!buffer.matches("=")) buffer = BuffReader.readLine();;
             buffer = BuffReader.readLine();
             while (buffer != null) {
                 split = buffer.split("\\+");

@@ -1,4 +1,7 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Scanner;
@@ -7,7 +10,7 @@ import java.util.Scanner;
 * implemented by Daniel and Redden
 */
 
-public class Class extends JPanel{
+public class Class extends JPanel implements ActionListener{
 
     private File Class;
     private File Semester;
@@ -18,150 +21,115 @@ public class Class extends JPanel{
 
     private int sectionCount = 0;
 
-    public Class(File c, File sem) {
+    private JButton selectBtn;
+    private JButton backBtn;
+    private JButton finishBtn;
+
+    private JList<String> sectionList;
+
+    public Class(File c, File s) {
         Class = c;
-        Semester = sem;
-        startup(c);
+        Semester = s;
+        if(Class.list().length == 0) Gradebook.changeToClassSetup(c, s);
+        else {
+            assignComponents();
+            setComponents();
+        }
     }
 
-    public void startup(File c) {
-        Class = c;
-        if(Class.list().length == 0) initializeClass();
+    private void assignComponents() {
+        backBtn = new JButton("Go Back");
+        backBtn.addActionListener(this);
+        selectBtn = new JButton("Select Section");
+        selectBtn.addActionListener(this);
+        finishBtn = new JButton("Mark As Finished");
+        finishBtn.addActionListener(this);
+        fillSections();
+    }
 
+    private void fillSections() {
         getSections();
-        printClassDashboard();
-        String input;
-        while(!(input = getInput()).matches("q")) {
-            if(input.matches("0")) printClassDashboard();
-            else if(input.matches("f")) {
-                markClassFinished();
-                printClassDashboard();
-            }
-            else if(input.matches("[1-9]+")) {
-                int sec = Integer.parseInt(input);
-                if(sec > 0 && sec <= sectionCount+1) {
-                    Section.startup(sections[sec-1]);
-                    printClassDashboard();
-                }
-                else System.out.println("Sorry, Try Again.");
-            }
-            else System.out.println("Sorry, Try Again.");
-            System.out.println("Press 0 For Menu");
-        }
-        Gradebook.changeToSemester(Semester);
-    }
-
-    private void printClassDashboard() {
-        System.out.println("---------------------------------------");
-        System.out.println("\tGrade: " + getClassGrade(Class).substring(0,5));
-        System.out.println("---------------------------------------");
-        System.out.println("\tq: Go Back");
-        System.out.println("\tf: Mark Class As Finished");
-        System.out.println("\t0: Show Menu");
-        printSections();
-        System.out.println("---------------------------------------");
-    }
-
-    private void printSections() {
-        for(int i = 0; i < sectionCount; ++i) {
-            System.out.println("\t" + (i+1) + ": " + sections[i].getName());
-        }
+        DefaultListModel<String> list = new DefaultListModel<>();
+        for(File i: sections) list.addElement(i.getName());
+        sectionList = new JList<>(list);
     }
 
     private void getSections() {
         File[] temp = Class.listFiles();
-        classInfo = temp[0];
-        sectionCount = temp.length-1;
+        sectionCount = temp.length - 1;
         sections = new File[sectionCount];
         int index = 0;
-        for(int i = 0; i < temp.length; ++i) {
-            if(!temp[i].getName().matches("class")) {
+        for (int i = 0; i < temp.length; ++i) {
+            if (!temp[i].getName().matches("class")) {
                 sections[index] = temp[i];
                 index++;
             }
+            else
+                classInfo = temp[i];
         }
     }
 
-    private String getInput() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+    private void setComponents() {
+        removeAll();
+
+        setLayout(new GridLayout(1, 2, 0, 0));
+
+        JPanel Btns = new JPanel();
+        Btns.setLayout(new GridLayout(4, 1, 0, 0));
+        JPanel[][] panels = new JPanel[4][1];
+        for (int i = 0; i < 4; ++i) {
+            panels[i][0] = new JPanel();
+            Btns.add(panels[i][0]);
+        }
+
+        JLabel grade = new JLabel("Grade: " + getClassGrade(Class).split("\\+")[0]);
+        grade.setFont(new Font("grade",1,20));
+        grade.setHorizontalAlignment(JLabel.CENTER);
+        panels[0][0].setLayout(new BorderLayout());
+        panels[0][0].add(grade);
+        panels[1][0].add(selectBtn);
+        panels[2][0].add(backBtn);
+        if(!isFinished()) {
+            panels[2][0].add(finishBtn);
+            panels[3][0].add(backBtn);
+        }
+
+        add(Btns);
+        JScrollPane scroll = new JScrollPane();
+        scroll.setViewportView(sectionList);
+        add(scroll);
+
+        repaint();
+        validate();
     }
 
-    private void initializeClass() {
-        File classFile = new File(Class.getAbsolutePath() + "/class");
-        try{ classFile.createNewFile();}
-        catch(IOException IOE) {}
-        System.out.println("---------------------------------------");
-        System.out.println("Set Up Your Class");
-        System.out.println("---------------------------------------");
-
-        Scanner scanner = new Scanner(System.in);
-        boolean get = true;
-        String input = "";
-        String buffer = "";
-        String section = "";
-        String sections = "";
-        int total = 0;
-        while(get) {
-            get = false;
-            System.out.println("Enter Credit Hours: ");
-            buffer = scanner.nextLine();
-            if(!buffer.matches("[1-9]")) {
-                get = true;
-                System.out.println("Bad Credit Hours, Try Again");
-            }
+    public void actionPerformed(ActionEvent ae) {
+        resetComponents();
+        if(ae.getSource() == backBtn) Gradebook.changeToSemester(Semester);
+        else if(ae.getSource() == selectBtn) {
+            if(sectionList.isSelectionEmpty()) selectBtn.setBackground(new Color(255,204,204));
+            else Section.startup(new File(Class.getAbsolutePath()+"/"+sectionList.getSelectedValue()));//Gradebook.changeToSection();
         }
-        input += buffer + "\n";
-        get = true;
-        while(get) {
-            while (get) {
-                System.out.println("---------------------------------------");
-                System.out.println("Enter Subject Info");
-                System.out.println("---------------------------------------");
-                while (get) {
-                    System.out.println("Enter Subject Name: ");
-                    buffer = scanner.nextLine();
-                    if (!buffer.matches("[a-zA-Z]+")) System.out.println("Bad Subject Name, Try Again");
-                    else get = false;
-                }
-                section += buffer+"+";
-                get = true;
-                while (get) {
-                    System.out.println("Enter Subject Weight Percentage: ");
-                    buffer = scanner.nextLine();
-                    if (!buffer.matches("[0-9]+") || Integer.parseInt(buffer) > 100 || Integer.parseInt(buffer) < 1) {
-                        System.out.println("Bad Percentage, Try Again");
-                    } else get = false;
-                }
-                section += buffer+"\n";
-                sections += section;
-                section = "";
-                total += Integer.parseInt(buffer);
-                do {
-                    System.out.println("---------------------------------------");
-                    System.out.println("0:Add Another Section");
-                    System.out.println("1:Submit");
-                    System.out.println("---------------------------------------");
-                    buffer = scanner.nextLine();
-                    if(buffer.matches("0")) {get = true; break;}
-                } while(!buffer.matches("0") && !buffer.matches("1"));
-            }
-            if(total != 100) {
-                System.out.println("Total is not 100, Try Again");
-                get = true;
-                sections = "";
-                total = 0;
-            }
-            else get = false;
-        }
-        input += sections;
-        input += "0";
+        else if(ae.getSource() == finishBtn) markClassFinished();
+        setComponents();
+    }
 
+    private void resetComponents() {
+        selectBtn.setBackground(null);
+    }
+
+    private boolean isFinished() {
+        String buffer, code = "";
         try{
-            BufferedWriter writer = new BufferedWriter(new FileWriter(classFile));
-            writer.write(input);
-            writer.close();
-        } catch (IOException IOE) {}
+            BufferedReader BuffReader = new BufferedReader(new FileReader(classInfo));
+            while((buffer = BuffReader.readLine()) != null) {
+                code = buffer;
+            }
+            BuffReader.close();
+        }
+        catch(IOException IOE) {}
+        if(code.matches("1")) return true;
+        else return false;
     }
 
     public boolean markClassFinished() {

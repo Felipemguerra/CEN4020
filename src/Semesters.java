@@ -110,7 +110,11 @@ public class Semesters extends JPanel implements ActionListener{
             else Gradebook.changeToSemester(new File(semestersPath+semestersList.getSelectedValue()));
         }
         else if(ae.getSource() == submitBtn) {
-            if(addSemester()) addingSemester = false;
+            if(addSemester()) {
+                addingSemester = false;
+                semName.setText(null);
+                semYear.setText(null);
+            }
             else submitBtn.setBackground(new Color(255,204,204));
         }
         setComponents();
@@ -119,8 +123,6 @@ public class Semesters extends JPanel implements ActionListener{
     private void resetComponents() {
         selectBtn.setBackground(null);
         submitBtn.setBackground(null);
-        semName.setText(null);
-        semYear.setText(null);
     }
 
     private void getSemesters() {
