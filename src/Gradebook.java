@@ -74,6 +74,16 @@ public class Gradebook{
         frame.validate();
     }
 
-    public static void changeToSection() {}
-    public static void changeToAssignment() {}
+    public static void changeToSection(File sec, File c, File sem) {
+        container.removeAll();
+        container.add(new Section(sec,c, sem));
+        frame.repaint();
+        frame.validate();
+    }
+    public static void changeToAssignment(File a, File sec, File c, File sem) {
+        container.removeAll();
+        container.add(new Assignment(a,sec,c,sem));
+        frame.repaint();
+        frame.validate();
+    }
 }

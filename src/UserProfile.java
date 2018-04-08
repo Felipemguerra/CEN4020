@@ -121,7 +121,7 @@ public class UserProfile extends JPanel implements ActionListener{
         catch (IOException IOE) {}
     }
 
-    private static float getGrade(File semDir) {
+    public static float getGrade(File semDir) {
         float grade = 0;
         if(semDir.exists())
         {
@@ -132,8 +132,8 @@ public class UserProfile extends JPanel implements ActionListener{
         for(int i = 0; i < semesters.length; ++i) {
             grades = Semester.getSemesterGrade(semesters[i]);
             for(int e = 0; e < grades.length; ++e) {
-                creditHours+= Integer.parseInt(grades[i].split("\\+")[1]);
-                semGrade += getPoints(grades[e]);
+                creditHours+= Integer.parseInt(grades[e].split("\\+")[1]);
+                if(getPoints(grades[e]) != -1) semGrade += getPoints(grades[e]);
             }
             grade += semGrade;
             semGrade = 0;
@@ -146,6 +146,8 @@ public class UserProfile extends JPanel implements ActionListener{
     private static double getPoints(String classGrade) {
         float points;
         float grade = Float.parseFloat(classGrade.split("\\+")[0]);
+        System.out.println(grade);
+        if(grade == -1) return -1;
         if(grade >= 93) points = (float)4.00;
         else if(grade >= 90) points = (float)3.75;
         else if(grade >= 87) points = (float)3.25;

@@ -108,7 +108,7 @@ public class Class extends JPanel implements ActionListener{
         if(ae.getSource() == backBtn) Gradebook.changeToSemester(Semester);
         else if(ae.getSource() == selectBtn) {
             if(sectionList.isSelectionEmpty()) selectBtn.setBackground(new Color(255,204,204));
-            else Section.startup(new File(Class.getAbsolutePath()+"/"+sectionList.getSelectedValue()));//Gradebook.changeToSection();
+            else Gradebook.changeToSection(new File(Class.getAbsolutePath()+"/"+sectionList.getSelectedValue()),Class,Semester);
         }
         else if(ae.getSource() == finishBtn) markClassFinished();
         setComponents();
