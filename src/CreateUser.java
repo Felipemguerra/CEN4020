@@ -41,7 +41,7 @@ public class CreateUser extends JPanel implements ActionListener{
         submitBtn.setText("Submit");
         submitBtn.addActionListener(this);
         addBtn = new JButton();
-        addBtn.setText("Add Class");
+        addBtn.setText("Add Another Class");
         addBtn.addActionListener(this);
         backBtn = new JButton();
         backBtn.setText("Go Back");
@@ -74,7 +74,7 @@ public class CreateUser extends JPanel implements ActionListener{
 
     private void setComponents() {
         removeAll();
-        setLayout(new GridLayout(5,2,0,0));
+        setLayout(new GridLayout(5,2,15,15));
 
         JPanel[][] panels = new JPanel[5][2];
         for(int i = 0; i < 5; ++i) {
@@ -85,11 +85,11 @@ public class CreateUser extends JPanel implements ActionListener{
         }
 
         if(addingClass) {
-            JLabel sCode = new JLabel("Enter Subject Code:");
+            JLabel sCode = new JLabel("Enter Subject Code (ie COP, CIS, CEN):");
             sCode.setFont(new Font("scode",0,14));
             panels[0][0].add(sCode);
 
-            JLabel cCode = new JLabel("Enter Class Code:");
+            JLabel cCode = new JLabel("Enter Class Code (Four Digit Code):");
             cCode.setFont(new Font("ccode",0,14));
             panels[1][0].add(cCode);
 

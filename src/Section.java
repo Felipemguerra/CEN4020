@@ -66,7 +66,7 @@ public class Section extends JPanel implements ActionListener{
         removeAll();
 
         if(addingAssgnment) {
-            setLayout(new GridLayout(3, 2, 0, 0));
+            setLayout(new GridLayout(3, 2, 15, 15));
             JPanel[][] panels = new JPanel[3][2];
             for (int i = 0; i < 3; ++i) {
                 for(int e = 0; e < 2; e++) {
@@ -105,7 +105,7 @@ public class Section extends JPanel implements ActionListener{
             JLabel instruct = new JLabel("Select an Assignment: ");
             instruct.setFont(new Font("instruct", 0, 16));
             instruct.setHorizontalAlignment(JLabel.CENTER);
-            panels[0][0].setLayout(new GridLayout(2,1,0,0));
+            panels[0][0].setLayout(new GridLayout(2,1,15,15));
             panels[0][0].add(grade);
             panels[0][0].add(instruct);
             panels[1][0].add(selectBtn);

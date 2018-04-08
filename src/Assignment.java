@@ -45,7 +45,7 @@ public class Assignment extends JPanel implements ActionListener{
     private void setComponents() {
         removeAll();
 
-        setLayout(new GridLayout(3, 2, 0, 0));
+        setLayout(new GridLayout(3, 2, 15, 15));
         JPanel[][] panels = new JPanel[3][2];
         for (int i = 0; i < 3; ++i) {
             for (int e = 0; e < 2; e++) {

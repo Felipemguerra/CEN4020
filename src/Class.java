@@ -72,10 +72,10 @@ public class Class extends JPanel implements ActionListener{
     private void setComponents() {
         removeAll();
 
-        setLayout(new GridLayout(1, 2, 0, 0));
+        setLayout(new GridLayout(1, 2, 15, 15));
 
         JPanel Btns = new JPanel();
-        Btns.setLayout(new GridLayout(4, 1, 0, 0));
+        Btns.setLayout(new GridLayout(4, 1, 15, 15));
         JPanel[][] panels = new JPanel[4][1];
         for (int i = 0; i < 4; ++i) {
             panels[i][0] = new JPanel();
@@ -88,7 +88,7 @@ public class Class extends JPanel implements ActionListener{
         JLabel instruct = new JLabel("Select a Section: ");
         instruct.setFont(new Font("instruct",0,16));
         instruct.setHorizontalAlignment(JLabel.CENTER);
-        panels[0][0].setLayout(new GridLayout(2,1,0,0));
+        panels[0][0].setLayout(new GridLayout(2,1,15,15));
         panels[0][0].add(grade);
         panels[0][0].add(instruct);
         panels[1][0].add(selectBtn);

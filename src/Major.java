@@ -50,10 +50,10 @@ public class Major extends JPanel implements ActionListener {
     private void setComponents() {
         removeAll();
 
-        setLayout(new GridLayout(1, 2, 0, 0));
+        setLayout(new GridLayout(1, 2, 15, 15));
 
         JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(4, 1, 0, 0));
+        buttons.setLayout(new GridLayout(4, 1, 15, 15));
 
         JPanel[][] panels = new JPanel[4][1];
         for (int i = 0; i < 4; ++i) {
@@ -63,7 +63,7 @@ public class Major extends JPanel implements ActionListener {
         add(buttons);
 
         getMajor();
-        panels[0][0].setLayout(new GridLayout(2,1,0,0));
+        panels[0][0].setLayout(new GridLayout(2,1,15,15));
         JLabel major = new JLabel(Major);
         major.setFont(new Font("majorLabel", 0, 18));
         major.setHorizontalAlignment(JLabel.CENTER);

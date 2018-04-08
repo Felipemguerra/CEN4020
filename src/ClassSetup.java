@@ -49,7 +49,7 @@ public class ClassSetup extends JPanel implements ActionListener {
 
     private void setComponents() {
         removeAll();
-        setLayout(new GridLayout(5,2,0,0));
+        setLayout(new GridLayout(5,2,15,15));
 
         JPanel[][] panels = new JPanel[5][2];
         for(int i = 0; i < 5; ++i) {

@@ -66,7 +66,7 @@ public class StartMenu extends JPanel implements ActionListener{
 
     private void setComponents() {
         removeAll();
-        setLayout(new GridLayout(4,2,0,0));
+        setLayout(new GridLayout(4,2,15,15));
 
         JPanel[][] panels = new JPanel[4][2];
         for(int i = 0; i < 4; ++i) {
@@ -76,7 +76,7 @@ public class StartMenu extends JPanel implements ActionListener{
             }
         }
 
-        panels[1][0].setLayout(new GridLayout(2,1,0,0));
+        panels[1][0].setLayout(new GridLayout(2,1,15,15));
 
         JLabel welcome = new JLabel("Welcome to Gradebook");
         welcome.setFont(new Font("name",1,20));

@@ -57,7 +57,7 @@ public class Semester extends JPanel implements ActionListener{
     private void setComponents() {
         removeAll();
         if(addingClass) {
-            setLayout(new GridLayout(4, 2, 0, 0));
+            setLayout(new GridLayout(4, 2, 15, 15));
 
             JPanel[][] panels = new JPanel[4][2];
             for (int i = 0; i < 4; ++i) {
@@ -77,10 +77,10 @@ public class Semester extends JPanel implements ActionListener{
             panels[1][1].add(classCode);
         }
         else {
-            setLayout(new GridLayout(1, 2, 0, 0));
+            setLayout(new GridLayout(1, 2, 15, 15));
 
             JPanel Btns = new JPanel();
-            Btns.setLayout(new GridLayout(4, 1, 0, 0));
+            Btns.setLayout(new GridLayout(4, 1, 15, 15));
             JPanel[][] panels = new JPanel[4][1];
             for (int i = 0; i < 4; ++i) {
                 panels[i][0] = new JPanel();
