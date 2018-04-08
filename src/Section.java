@@ -102,8 +102,12 @@ public class Section extends JPanel implements ActionListener{
             JLabel grade = new JLabel("Grade: " + String.format("%.2f", (getSectionGrade(Section) * 100)));
             grade.setFont(new Font("grade", 1, 20));
             grade.setHorizontalAlignment(JLabel.CENTER);
-            panels[0][0].setLayout(new BorderLayout());
+            JLabel instruct = new JLabel("Select an Assignment: ");
+            instruct.setFont(new Font("instruct", 0, 16));
+            instruct.setHorizontalAlignment(JLabel.CENTER);
+            panels[0][0].setLayout(new GridLayout(2,1,0,0));
             panels[0][0].add(grade);
+            panels[0][0].add(instruct);
             panels[1][0].add(selectBtn);
             panels[2][0].add(addBtn);
             panels[3][0].add(backBtn);

@@ -80,16 +80,20 @@ public class Semester extends JPanel implements ActionListener{
             setLayout(new GridLayout(1, 2, 0, 0));
 
             JPanel Btns = new JPanel();
-            Btns.setLayout(new GridLayout(3, 1, 0, 0));
-            JPanel[][] panels = new JPanel[3][1];
-            for (int i = 0; i < 3; ++i) {
+            Btns.setLayout(new GridLayout(4, 1, 0, 0));
+            JPanel[][] panels = new JPanel[4][1];
+            for (int i = 0; i < 4; ++i) {
                 panels[i][0] = new JPanel();
                 Btns.add(panels[i][0]);
             }
 
-            panels[0][0].add(selectBtn);
-            panels[1][0].add(addBtn);
-            panels[2][0].add(backBtn);
+            JLabel instruct = new JLabel("Select a Class:");
+            instruct.setFont(new Font("instruct",1,20));
+            instruct.setHorizontalAlignment(JLabel.CENTER);
+            panels[0][0].add(instruct);
+            panels[1][0].add(selectBtn);
+            panels[2][0].add(addBtn);
+            panels[3][0].add(backBtn);
 
             add(Btns);
             JScrollPane scroll = new JScrollPane();
@@ -103,7 +107,13 @@ public class Semester extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent ae) {
         resetComponents();
         if(ae.getSource() == backBtn) {
-            if(addingClass) addingClass = false;
+            if(addingClass) {
+                addingClass = false;
+                subjectCode.setText(null);
+                classCode.setText(null);
+                subjectCode.setBackground(new Color(255,255,255));
+                classCode.setBackground(new Color(255,255,255));
+            }
             else Gradebook.changeToSemesters();
         }
         else if(ae.getSource() == addBtn) {
@@ -118,8 +128,10 @@ public class Semester extends JPanel implements ActionListener{
                 addingClass = false;
                 subjectCode.setText(null);
                 classCode.setText(null);
+                subjectCode.setBackground(new Color(255,255,255));
+                classCode.setBackground(new Color(255,255,255));
             }
-            else submitBtn.setBackground(new Color(255,204,204));
+            //else submitBtn.setBackground(new Color(255,204,204));
         }
         setComponents();
     }
@@ -137,13 +149,23 @@ public class Semester extends JPanel implements ActionListener{
         String sCode = subjectCode.getText();
         String cCode = classCode.getText();
 
-        if(!sCode.matches("[a-zA-Z]+") || sCode.length() != 3) return false;
+        if(!sCode.matches("[a-zA-Z]+") || sCode.length() != 3) {
+            subjectCode.setBackground(new Color(255,204,204));
+            return false;
+        }
         subjectCode.setText(sCode.toUpperCase());
 
-        if(!cCode.matches("[0-9]+") || cCode.length() != 4) return false;
+        if(!cCode.matches("[0-9]+") || cCode.length() != 4) {
+            classCode.setBackground(new Color(255,204,204));
+            return false;
+        }
 
         for(File i : classes)
-            if(i.getName().matches(subjectCode.getText()+" "+classCode.getText())) return false;
+            if(i.getName().matches(subjectCode.getText()+" "+classCode.getText())) {
+                subjectCode.setBackground(new Color(255,204,204));
+                classCode.setBackground(new Color(255,204,204));
+                return false;
+            }
 
         addNewClass(subjectCode.getText()+" "+classCode.getText());
         fillClasses();

@@ -85,8 +85,12 @@ public class Class extends JPanel implements ActionListener{
         JLabel grade = new JLabel("Grade: " + getClassGrade(Class).split("\\+")[0]);
         grade.setFont(new Font("grade",1,20));
         grade.setHorizontalAlignment(JLabel.CENTER);
-        panels[0][0].setLayout(new BorderLayout());
+        JLabel instruct = new JLabel("Select a Section: ");
+        instruct.setFont(new Font("instruct",0,16));
+        instruct.setHorizontalAlignment(JLabel.CENTER);
+        panels[0][0].setLayout(new GridLayout(2,1,0,0));
         panels[0][0].add(grade);
+        panels[0][0].add(instruct);
         panels[1][0].add(selectBtn);
         panels[2][0].add(backBtn);
         if(!isFinished()) {
@@ -118,7 +122,7 @@ public class Class extends JPanel implements ActionListener{
         selectBtn.setBackground(null);
     }
 
-    private boolean isFinished() {
+    public boolean isFinished() {
         String buffer, code = "";
         try{
             BufferedReader BuffReader = new BufferedReader(new FileReader(classInfo));

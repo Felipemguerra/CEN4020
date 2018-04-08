@@ -61,11 +61,17 @@ public class Assignment extends JPanel implements ActionListener{
             panels[0][0].setLayout(new BorderLayout());
             panels[0][0].add(gpa);
             if (hasGrade()) {
+                JLabel title = new JLabel("Score");
+                title.setFont(new Font("title", 1, 30));
+                title.setHorizontalAlignment(JLabel.CENTER);
                 JLabel grade = new JLabel(getScore() + " / " + getTotal());
-                grade.setFont(new Font("grade", 1, 30));
+                grade.setFont(new Font("grade", 1, 26));
                 grade.setHorizontalAlignment(JLabel.CENTER);
+                panels[0][1].setLayout(new BorderLayout());
+                panels[0][1].add(title);
                 panels[1][1].setLayout(new BorderLayout());
                 panels[1][1].add(grade);
+
             } else {
                 JLabel grade = new JLabel("No Grade");
                 grade.setFont(new Font("grade", 1, 30));

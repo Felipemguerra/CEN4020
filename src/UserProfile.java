@@ -146,7 +146,6 @@ public class UserProfile extends JPanel implements ActionListener{
     private static double getPoints(String classGrade) {
         float points;
         float grade = Float.parseFloat(classGrade.split("\\+")[0]);
-        System.out.println(grade);
         if(grade == -1) return -1;
         if(grade >= 93) points = (float)4.00;
         else if(grade >= 90) points = (float)3.75;

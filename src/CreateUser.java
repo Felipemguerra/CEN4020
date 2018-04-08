@@ -152,6 +152,18 @@ public class CreateUser extends JPanel implements ActionListener{
                 populate();
                 if(isMajorChange) {
                     //update progress
+                    File semesters = new File(Semesters.semestersPath);
+                    if(semesters.exists()) {
+                        for(File i : semesters.listFiles()){
+                            for(File e : i.listFiles()){
+                                Class c = new Class(e,i);
+                                if(c.isFinished()){
+                                    Major.updateProgress(e.getName());
+                                }
+                            }
+                        }
+
+                    }
                     Gradebook.changeToMajor();
                 }
                 else Gradebook.changeToStartMenu();
@@ -231,7 +243,7 @@ public class CreateUser extends JPanel implements ActionListener{
     }
 
     private String getAClass() {
-        return sCodeInput.getText()+"+"+cCodeInput.getText()+"+"+nameInput.getText()+"+"+hoursInput.getText();
+        return sCodeInput.getText().toUpperCase()+"+"+cCodeInput.getText()+"+"+nameInput.getText()+"+"+hoursInput.getText();
     }
 
     public void populate() {
