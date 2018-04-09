@@ -8,6 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 
+/*
+ * Implemented by Felipe and Redden
+ * */
+
 public class ClassSetup extends JPanel implements ActionListener {
 
     private File Class;

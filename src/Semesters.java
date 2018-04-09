@@ -3,7 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Scanner;
+
+/*
+ * Implemented by Felipe and Daniel
+ * */
 
 public class Semesters extends JPanel implements ActionListener{
 

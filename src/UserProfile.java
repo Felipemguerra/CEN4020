@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.Scanner;
 
 /*Implemented by Daniel and Redden*/
 
@@ -123,22 +122,26 @@ public class UserProfile extends JPanel implements ActionListener{
 
     public static float getGrade(File semDir) {
         float grade = 0;
-        if(semDir.exists())
-        {
-        File[] semesters = semDir.listFiles();
-        float semGrade = 0;
-        int creditHours = 0;
-        String[] grades;
-        for(int i = 0; i < semesters.length; ++i) {
-            grades = Semester.getSemesterGrade(semesters[i]);
-            for(int e = 0; e < grades.length; ++e) {
-                creditHours+= Integer.parseInt(grades[e].split("\\+")[1]);
-                if(getPoints(grades[e]) != -1) semGrade += getPoints(grades[e]);
+        boolean goodGPA = false;
+        if(semDir.exists()) {
+            File[] semesters = semDir.listFiles();
+            float semGrade = 0;
+            int creditHours = 0;
+            String[] grades;
+            for (int i = 0; i < semesters.length; ++i) {
+                grades = Semester.getSemesterGrade(semesters[i]);
+                if (grades == null) continue;
+                for (int e = 0; e < grades.length; ++e) {
+                    creditHours += Integer.parseInt(grades[e].split("\\+")[1]);
+                    if (getPoints(grades[e]) != -1) {
+                        semGrade += getPoints(grades[e]);
+                        goodGPA = true;
+                    }
+                }
+                grade += semGrade;
+                semGrade = 0;
             }
-            grade += semGrade;
-            semGrade = 0;
-        }
-        grade /= creditHours;
+            if (goodGPA) grade /= creditHours;
         }
         return grade;
     }

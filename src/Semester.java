@@ -181,6 +181,7 @@ public class Semester extends JPanel implements ActionListener{
         String[] grades = new String[semester.list().length];
         File[] classes = semester.listFiles();
         int index = 0;
+        if(classes.length == 0) return null;
         for(File i : classes) {
             grades[index] = Class.getClassGrade(i);
             index++;

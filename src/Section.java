@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.Scanner;
 
 /*
 * implemented by Redden and Brian
@@ -99,7 +98,11 @@ public class Section extends JPanel implements ActionListener{
                 Btns.add(panels[i][0]);
             }
 
-            JLabel grade = new JLabel("Grade: " + String.format("%.2f", (getSectionGrade(Section) * 100)));
+            JLabel grade;
+            if(getSectionGrade(Section) != -1) {
+                 grade = new JLabel("Grade: " + String.format("%.2f", (getSectionGrade(Section) * 100)));
+            }
+            else grade = new JLabel("No Grade");
             grade.setFont(new Font("grade", 1, 20));
             grade.setHorizontalAlignment(JLabel.CENTER);
             JLabel instruct = new JLabel("Select an Assignment: ");

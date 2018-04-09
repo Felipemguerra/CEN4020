@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.text.DecimalFormat;
-import java.util.Scanner;
 
 /*
 * implemented by Daniel and Redden
@@ -82,7 +80,11 @@ public class Class extends JPanel implements ActionListener{
             Btns.add(panels[i][0]);
         }
 
-        JLabel grade = new JLabel("Grade: " + getClassGrade(Class).split("\\+")[0]);
+        JLabel grade;
+        if(!getClassGrade(Class).split("\\+")[0].matches("-1")) {
+            grade = new JLabel("Grade: " + getClassGrade(Class).split("\\+")[0]);
+        }
+        else grade = new JLabel("No Grade");
         grade.setFont(new Font("grade",1,20));
         grade.setHorizontalAlignment(JLabel.CENTER);
         JLabel instruct = new JLabel("Select a Section: ");
@@ -173,6 +175,7 @@ public class Class extends JPanel implements ActionListener{
         try {
             int total = 0;
             File classinfo = new File(classfile.getAbsolutePath()+"/class");
+            if(!classinfo.exists()) return "-1+0";
             BufferedReader BuffReader = new BufferedReader(new FileReader(classinfo));
             String buffer = BuffReader.readLine();
             creditHours = buffer;
@@ -198,10 +201,12 @@ public class Class extends JPanel implements ActionListener{
         catch(IOException IOE) {}
         File[] sections = classfile.listFiles();
         float grade, total = 0;
+        boolean badClass = true;
         for(File i : sections) {
             if(!i.getName().matches("class")) {
                 grade = Section.getSectionGrade(i);
                 if(grade != -1) {
+                    badClass = false;
                     for (String s : sectionInfo) {
                         if (s.split("\\+")[0].matches(i.getName())) {
                             grade = grade * Integer.parseInt(s.split("\\+")[1]);
@@ -212,7 +217,7 @@ public class Class extends JPanel implements ActionListener{
                 }
             }
         }
-
+        if(badClass) return "-1+0";
         return String.valueOf(total)+"+"+creditHours;
     }
 }
